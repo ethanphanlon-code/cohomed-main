@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /*.json$
+
+Sitemap: https://cohomed.com.au/sitemap.xml
+
+# Crawl delay
+Crawl-delay: 1
+
+# User agents
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /

@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-cream-50 text-teal-900 font-body;
+  }
+  ::selection {
+    @apply bg-teal-100 text-teal-800;
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-6 md:px-12 lg:px-20 xl:px-32;
+  }
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-teal-500 text-white px-7 py-3.5 rounded-full
+           font-body font-semibold text-base tracking-tight
+           hover:bg-teal-600 active:bg-teal-700
+           transition-all duration-200 ease-out
+           hover:shadow-lg hover:shadow-teal-500/20
+           hover:-translate-y-0.5;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center gap-2 bg-cream-200 text-teal-800 px-7 py-3.5 rounded-full
+           font-body font-semibold text-base tracking-tight
+           hover:bg-bark-100 active:bg-bark-200
+           transition-all duration-200 ease-out
+           hover:-translate-y-0.5;
+  }
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border-2 border-teal-500 text-teal-600 px-7 py-3.5 rounded-full
+           font-body font-semibold text-base tracking-tight
+           hover:bg-teal-50 active:bg-teal-100
+           transition-all duration-200 ease-out;
+  }
+  .card-soft {
+    @apply bg-white/80 backdrop-blur-sm rounded-2xl border border-cream-200 p-8
+           shadow-sm hover:shadow-md transition-shadow duration-300;
+  }
+  .prose-body {
+    @apply text-lg leading-relaxed text-teal-800/75 font-light;
+  }
+  .section-label {
+    @apply text-sm font-semibold tracking-widest uppercase text-teal-500 mb-4;
+  }
+}
+
+/* Subtle grain texture overlay */
+.grain::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  opacity: 0.025;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
