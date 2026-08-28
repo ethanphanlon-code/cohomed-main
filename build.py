@@ -40,8 +40,7 @@ def nav(current: str) -> str:
     return f"""<header class="nav">
   <nav class="nav-inner" aria-label="Primary">
     <a class="logo" href="/" aria-label="CoHomed home">{MARK}<span>CoHomed</span></a>
-    <div class="nav-links">{links}</div>
-    <a class="btn btn-primary btn-sm" href="/#get-started">Get the app</a>
+    <div class="nav-links">{links}<a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
   </nav>
 </header>"""
 

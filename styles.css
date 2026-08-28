@@ -189,18 +189,43 @@ section.field .eyebrow { color: var(--on-accent-label); }
   align-items: center;
   gap: clamp(16px, 3vw, 40px);
 }
+.nav-inner > .logo { flex: none; }
+
+/* The links strip carries the CTA as its last item. On desktop the auto
+   margin pushes the CTA to the far right; once the row overflows on narrow
+   screens the auto margin collapses and the CTA simply rides along at the
+   end of the scroll. One rule, both layouts. */
 .nav-links {
   display: flex;
   align-items: center;
   gap: clamp(14px, 2vw, 28px);
-  margin-right: auto;
+  flex: 1 1 auto;
+  min-width: 0;
   overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   padding: 4px 2px;
 }
 .nav-links::-webkit-scrollbar { display: none; }
 .nav-links a { color: var(--body); font-size: 15px; white-space: nowrap; }
 .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); }
+
+.nav-cta {
+  margin-left: auto;
+  flex: none;
+}
+.nav-cta:hover { color: var(--surface); }
+
+/* Below this the row cannot hold the wordmark and a readable set of links at
+   the same time. The mark alone still reads as the logo, and buys back
+   roughly 110px — enough for "How it works" to stop clipping mid-word. */
+@media (max-width: 560px) {
+  .nav-inner { gap: 14px; }
+  .nav-inner > .logo span { display: none; }
+  .nav-links { gap: 18px; }
+  .nav-links a { font-size: 14.5px; }
+}
 
 /* ------------------------------------------------------------- buttons -- */
 
