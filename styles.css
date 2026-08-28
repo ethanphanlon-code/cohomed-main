@@ -208,14 +208,19 @@ section.field .eyebrow { color: var(--on-accent-label); }
   padding: 4px 2px;
 }
 .nav-links::-webkit-scrollbar { display: none; }
-.nav-links a { color: var(--body); font-size: 15px; white-space: nowrap; }
-.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); }
+/* :not(.nav-cta) matters — the CTA lives inside this strip, and a bare
+   `.nav-links a` rule outranks `.btn-primary` on specificity, which would
+   repaint the button's label in body brown on sage. Let the button own its
+   own colour. */
+.nav-links a:not(.nav-cta) { color: var(--body); font-size: 15px; white-space: nowrap; }
+.nav-links a:not(.nav-cta):hover,
+.nav-links a:not(.nav-cta)[aria-current="page"] { color: var(--ink); }
 
 .nav-cta {
   margin-left: auto;
   flex: none;
+  white-space: nowrap;
 }
-.nav-cta:hover { color: var(--surface); }
 
 /* Below this the row cannot hold the wordmark and a readable set of links at
    the same time. The mark alone still reads as the logo, and buys back
@@ -224,7 +229,7 @@ section.field .eyebrow { color: var(--on-accent-label); }
   .nav-inner { gap: 14px; }
   .nav-inner > .logo span { display: none; }
   .nav-links { gap: 18px; }
-  .nav-links a { font-size: 14.5px; }
+  .nav-links a:not(.nav-cta) { font-size: 14.5px; }
 }
 
 /* ------------------------------------------------------------- buttons -- */
