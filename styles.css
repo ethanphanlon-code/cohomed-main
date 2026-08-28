@@ -1,0 +1,572 @@
+/* ==========================================================================
+   CoHomed — website stylesheet
+   Source of truth: ../docs/DESIGN_SYSTEM.md
+   Every colour, size and radius here comes from that document. Do not invent
+   values; if something is missing, add it there first.
+   ========================================================================== */
+
+:root {
+  /* Sage — the brand */
+  --accent:        #4E6B54;
+  --accent-deep:   #3B5341;
+  --accent-wash:   #EDF1EC;
+  --accent-wash-b: #D6E0D5;
+  --accent-label:  #7C9280;
+  --accent-dash:   #A7BBA9;
+
+  /* On a solid sage field */
+  --on-accent:       #FFF9F3;
+  --on-accent-label: #B9CBBB;
+  --on-accent-body:  #D8E2D9;
+
+  /* Clay — rationed to attention states and chart series only */
+  --clay:      #C25A38;
+  --clay-deep: #A44526;
+  --clay-soft: #D98C6A;
+
+  /* Ink */
+  --ink:        #241E19;
+  --ink-soft:   #3B322B;
+  --body:       #4C4137;
+  --body-soft:  #574B41;
+  --muted:      #6B5F55;
+  --muted-deep: #8C7B68;
+  --label:      #A0917F;
+
+  /* Surfaces */
+  --canvas:       #FAF6F0;
+  --canvas-warm:  #F4EADC;
+  --surface:      #FFFCF8;
+  --surface-tint: #F6EDE1;
+  --surface-alt:  #FBF9F4;
+  --surface-lift: #FBF6EE;
+  --photo-plate:  #EFE4D6;
+
+  /* Borders */
+  --border:        #E8DCCB;
+  --border-soft:   #EBDFCF;
+  --border-warm:   #EAE0D3;
+  --border-strong: #D9C9B6;
+  --border-dashed: #C3B4A4;
+
+  /* Data */
+  --chart-1: #4E6B54;
+  --chart-2: #C25A38;
+  --chart-3: #C7B49F;
+  --chart-4: #D98C6A;
+
+  /* Shadows — warm-tinted, never neutral black */
+  --shadow-btn:       0 12px 28px -14px rgba(72,40,26,.60);
+  --shadow-btn-hover: 0 18px 34px -14px rgba(72,40,26,.55);
+  --shadow-nav:       0  8px 20px  -8px rgba(72,40,26,.45);
+  --shadow-card:      0 30px 60px -24px rgba(40,24,14,.65);
+  --shadow-hero:      0 40px 80px -40px rgba(58,36,22,.50);
+
+  --ease: cubic-bezier(.22,.61,.36,1);
+  --container: 1240px;
+  --gutter: clamp(18px, 4vw, 44px);
+}
+
+/* --------------------------------------------------------------- reset -- */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--ink);
+  font-family: Manrope, system-ui, -apple-system, sans-serif;
+  font-size: 17.5px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+img, svg { display: block; max-width: 100%; }
+::selection { background: #EBD9C6; }
+
+a { color: var(--accent-deep); text-decoration: none; }
+a:hover { color: var(--accent); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------------------------------------------------------------- type -- */
+
+h1, h2, h3, h4 {
+  margin: 0;
+  font-weight: 700;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+h1 { font-size: clamp(42px, 6.6vw, 76px); line-height: 1.06; letter-spacing: -.035em; }
+h2 { font-size: clamp(30px, 4.2vw, 50px); line-height: 1.10; letter-spacing: -.03em; }
+h2.major { font-size: clamp(32px, 4.8vw, 56px); line-height: 1.08; letter-spacing: -.035em; }
+h3 { font-size: 22px; line-height: 1.25; letter-spacing: -.02em; }
+h4 { font-size: 19px; line-height: 1.3;  letter-spacing: -.018em; }
+
+p { margin: 0; text-wrap: pretty; color: var(--body-soft); }
+
+.lead    { font-size: clamp(17px, 1.35vw, 20px); line-height: 1.62; }
+.small   { font-size: 15.5px; line-height: 1.6; }
+.caption { font-size: 14.5px; line-height: 1.5; color: var(--muted); }
+.fine    { font-size: 13px;   line-height: 1.5; color: var(--muted-deep); }
+
+/* The section opener. Carries a lot of the editorial feel — don't drop it. */
+.eyebrow {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--label);
+}
+
+.num { font-variant-numeric: tabular-nums; }
+
+/* -------------------------------------------------------------- layout -- */
+
+.wrap {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+section { padding-block: clamp(56px, 8vw, 108px); }
+section.tint { background: var(--surface-tint); border-block: 1px solid var(--border-warm); }
+section.field { background: var(--accent); color: var(--on-accent); }
+section.field h2, section.field h3 { color: var(--on-accent); }
+section.field p { color: var(--on-accent-body); }
+section.field .eyebrow { color: var(--on-accent-label); }
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(288px, 1fr));
+  gap: 18px;
+}
+.grid.wide { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: clamp(24px,3vw,48px); }
+.grid.two  { grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: clamp(40px,5vw,72px); }
+
+.stack   { display: grid; gap: 14px; }
+.stack-l { display: grid; gap: 22px; }
+.head    { max-width: 24em; }
+
+/* --------------------------------------------------------------- logo -- */
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: .38em;
+  color: var(--accent);
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -.015em;
+}
+.logo svg { width: 1.36em; height: 1.36em; flex: none; }
+.logo span { color: var(--ink); }
+.logo:hover span { color: var(--ink); }
+
+/* ---------------------------------------------------------------- nav -- */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(10px);
+  background: rgba(250,246,240,.82);
+  border-bottom: 1px solid var(--border-warm);
+}
+.nav-inner {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding: 14px var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: clamp(16px, 3vw, 40px);
+}
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 28px);
+  margin-right: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 2px;
+}
+.nav-links::-webkit-scrollbar { display: none; }
+.nav-links a { color: var(--body); font-size: 15px; white-space: nowrap; }
+.nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--ink); }
+
+/* ------------------------------------------------------------- buttons -- */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 999px;
+  padding: 15px 24px;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform .22s ease, box-shadow .22s ease, background .22s ease, border-color .22s ease;
+}
+.btn-primary { background: var(--accent); color: var(--on-accent); box-shadow: var(--shadow-btn); }
+.btn-primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-btn-hover); color: var(--on-accent); }
+.btn-primary:active { background: var(--accent-deep); transform: translateY(0); }
+
+.btn-secondary {
+  background: rgba(255,255,255,.5);
+  border: 1px solid var(--border-strong);
+  color: var(--ink);
+}
+.btn-secondary:hover { background: #fff; border-color: var(--ink); color: var(--ink); }
+
+.btn-on-accent { background: var(--on-accent); color: var(--accent-deep); }
+.btn-on-accent:hover { background: var(--surface-lift); color: var(--accent-deep); transform: translateY(-2px); }
+
+.btn-sm { padding: 10px 18px; font-size: 15px; }
+
+/* Anything not yet wired up */
+.btn-placeholder {
+  background: rgba(255,255,255,.5);
+  border: 1px dashed var(--border-dashed);
+  border-radius: 14px;
+  color: var(--muted);
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 20px;
+}
+.btn-placeholder:hover { border-color: var(--ink); color: var(--ink); }
+.btn-placeholder .tag {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--label);
+}
+
+/* --------------------------------------------------------------- cards -- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
+  border-radius: 18px;
+  padding: 26px;
+}
+.card.lift { transition: transform .3s var(--ease), box-shadow .3s ease; }
+.card.lift:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+.card .ico { color: var(--accent); margin-bottom: 15px; }
+.card h3, .card h4 { margin-bottom: 8px; }
+.card p { font-size: 15.5px; line-height: 1.6; }
+
+.card-outline { background: rgba(255,255,255,.5); border: 1px solid var(--border); border-radius: 20px; padding: clamp(22px,2.4vw,32px); }
+.card-tint    { background: var(--surface-tint); border: 1px solid var(--border-warm); border-radius: 20px; padding: clamp(22px,2.4vw,32px); }
+
+/* The sage wash panel, with the signature asymmetric corner */
+.panel-wash {
+  position: relative;
+  overflow: hidden;
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-wash-b);
+  border-radius: 22px 22px 22px 6px;
+  padding: clamp(24px, 3vw, 34px);
+}
+.panel-wash .eyebrow { color: var(--accent-label); }
+.panel-wash::before,
+.panel-wash::after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid rgba(78,107,84,.20);
+  pointer-events: none;
+}
+.panel-wash::before { right: -52px; top: -52px; width: 190px; height: 190px; }
+.panel-wash::after  { right: -14px; top: -14px; width: 120px; height: 120px; border-color: rgba(78,107,84,.14); }
+
+.panel-field {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: 22px 22px 22px 6px;
+  padding: clamp(26px, 3vw, 38px);
+}
+.panel-field .eyebrow { color: var(--on-accent-label); }
+.panel-field p { color: var(--on-accent-body); }
+.panel-field h2, .panel-field h3 { color: var(--on-accent); }
+
+.note {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--muted-deep);
+}
+
+/* ---------------------------------------------------------------- bits -- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,.6);
+  border-radius: 999px;
+  padding: 7px 14px 7px 11px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.pill .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+
+.ticks { display: grid; gap: 11px; padding: 0; margin: 0; list-style: none; }
+.ticks li { display: flex; gap: 11px; align-items: flex-start; font-size: 15.5px; line-height: 1.55; color: var(--ink-soft); }
+.ticks svg { flex: none; margin-top: 3px; color: var(--accent); }
+.panel-field .ticks li { color: var(--on-accent-body); }
+.panel-field .ticks svg { color: var(--on-accent); }
+
+.steps { counter-reset: step; display: grid; gap: 18px; }
+.step-n {
+  font-size: 13px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--accent);
+}
+
+.stat { display: grid; gap: 4px; }
+.stat .v { font-size: 30px; font-weight: 800; letter-spacing: -.02em; color: var(--ink); }
+.stat .k { font-size: 14.5px; color: var(--label); }
+
+.faq { border-top: 1px solid var(--border); }
+.faq details { border-bottom: 1px solid var(--border); }
+.faq summary {
+  cursor: pointer; list-style: none;
+  padding: 22px 0; font-size: 18px; font-weight: 600; color: var(--ink);
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-size: 22px; color: var(--label); font-weight: 400; }
+.faq details[open] summary::after { content: "\2013"; }
+.faq details > p { padding-bottom: 22px; max-width: 62ch; font-size: 16px; }
+
+/* -------------------------------------------------------------- photos --
+   Photographs sit on a warm plate, wear the asymmetric corner, and take a
+   scrim from the bottom so type can overlay without fighting the image.
+   ----------------------------------------------------------------------- */
+
+.photo {
+  position: relative;
+  overflow: hidden;
+  background: var(--photo-plate);
+  border-radius: 24px 24px 24px 6px;
+  box-shadow: var(--shadow-hero);
+}
+.photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(45,26,16,.34), rgba(45,26,16,0) 46%);
+  pointer-events: none;
+}
+.photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.photo.tall  { aspect-ratio: 4 / 4.6; }
+.photo.wide  { aspect-ratio: 16 / 9; }
+.photo.square{ aspect-ratio: 1 / 1; }
+.photo.band  { aspect-ratio: 21 / 8; border-radius: 26px 26px 26px 6px; }
+.photo.flat  { box-shadow: none; }
+
+/* Caption sitting over the scrim */
+.photo .over {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: clamp(18px, 3vw, 30px);
+  color: var(--on-accent);
+  font-size: 15.5px;
+  line-height: 1.5;
+  z-index: 1;
+}
+.photo .over strong { display: block; font-size: 19px; margin-bottom: 4px; }
+
+/* ---- real app screenshots ----
+   These are 1080×2400 device captures with the bezel and rounded corners
+   already baked in, so they need no frame of their own — just a radius that
+   clips the black corner masking, and the warm shadow.
+   ----------------------------------------------------------------------- */
+
+.shot {
+  display: block;
+  width: 100%;
+  max-width: 280px;
+  /* The <img> carries width/height attributes for layout stability; without
+     height:auto the browser honours the literal 2400px and the image renders
+     enormous. */
+  height: auto;
+  border-radius: 26px;
+  box-shadow: var(--shadow-hero);
+  background: var(--canvas);
+}
+
+.shots {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(24px, 4vw, 56px);
+  align-items: flex-start;
+  justify-content: center;
+}
+.shots figure { margin: 0; max-width: 280px; }
+.shots figcaption {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+/* Hero composition: photograph as the plate, app overlapping its lower-left.
+   The phone is 9:20, so at 190px wide it stands ~422px tall — comfortably
+   inside the 4:4.6 plate without spilling past the section. */
+.hero-media { position: relative; }
+.hero-media .shot {
+  position: absolute;
+  left: clamp(-14px, -2vw, -4px);
+  bottom: clamp(-26px, -2.2vw, -14px);
+  width: clamp(146px, 17vw, 194px);
+  max-width: none;
+  z-index: 1;
+  box-shadow: 0 30px 60px -24px rgba(40,24,14,.65);
+}
+
+@media (max-width: 900px) {
+  .hero-media .photo.tall { aspect-ratio: 4 / 3.6; }
+  .hero-media .shot { width: clamp(132px, 22vw, 168px); }
+}
+@media (max-width: 640px) {
+  .hero-media .photo.tall { aspect-ratio: 4 / 3.2; }
+  .hero-media .shot { width: 124px; bottom: -10px; left: -4px; }
+}
+
+/* Alternating step rows: image one side, copy the other */
+.alt-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  align-items: center;
+}
+.alt-row.flip > .alt-media { order: 2; }
+@media (max-width: 719px) {
+  .alt-row.flip > .alt-media { order: 0; }
+}
+
+/* Big numeral beside a step heading */
+.step-big {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+.step-big .n {
+  font-size: clamp(38px, 5vw, 54px);
+  font-weight: 800;
+  line-height: .9;
+  letter-spacing: -.04em;
+  color: var(--accent-wash-b);
+  font-variant-numeric: tabular-nums;
+}
+.step-big .l {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Small inline detail list under a step */
+.detail {
+  display: grid;
+  gap: 8px;
+  margin-top: 20px;
+  padding: 0;
+  list-style: none;
+}
+.detail li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--body-soft);
+}
+.detail svg { flex: none; margin-top: 4px; color: var(--accent); }
+
+/* -------------------------------------------------------------- footer -- */
+
+.footer { background: var(--ink); color: #CBBBA6; }
+.footer .wrap { padding-block: clamp(48px,6vw,80px) 34px; }
+.footer a { color: #CBBBA6; font-size: 15.5px; }
+.footer a:hover { color: var(--surface-lift); }
+.footer h4 { color: var(--surface-lift); font-size: 14px; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; }
+.footer .logo span { color: var(--surface-lift); }
+.footer .logo { color: var(--surface-lift); }
+.footer p { color: #CBBBA6; }
+.footer-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: clamp(28px,4vw,56px); }
+.footer-links { display: grid; gap: 10px; }
+.footer-base {
+  margin-top: 40px; padding-top: 24px;
+  border-top: 1px solid rgba(203,187,166,.22);
+  display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between;
+  font-size: 13px; color: #9A8B7C;
+}
+
+/* -------------------------------------------------------------- motion -- */
+
+@keyframes rise   { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+@keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+
+.rise { animation: rise .62s var(--ease) both; }
+.rise-1 { animation-delay: .08s; }
+.rise-2 { animation-delay: .18s; }
+.rise-3 { animation-delay: .28s; }
+
+/* Scroll reveals.
+   Gated behind .js, which is set on <html> by an inline script in the head.
+   Content is therefore visible by default — if the script never runs, or the
+   observer never fires, the page still reads. Hiding content behind a script
+   that might not run is how a whole page silently disappears. */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity .42s ease, transform .42s var(--ease);
+}
+.js .reveal.in { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+  .js .reveal { opacity: 1; transform: none; }
+}
+
+/* ------------------------------------------------------------ a11y bits -- */
+
+.skip {
+  position: absolute; left: -9999px;
+  background: var(--accent); color: var(--on-accent);
+  padding: 12px 20px; border-radius: 0 0 12px 0; z-index: 100;
+}
+.skip:focus { left: 0; top: 0; color: var(--on-accent); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
