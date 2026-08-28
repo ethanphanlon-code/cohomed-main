@@ -9,9 +9,27 @@ identical across pages; re-run it after editing SHELL or any PAGE body.
     python3 build.py
 """
 
+import hashlib
+import re
 from pathlib import Path
 
 HERE = Path(__file__).parent
+
+
+def css_version() -> str:
+    """Short content hash of styles.css, used to bust the CDN and browser cache.
+
+    HTML is revalidated on every request but styles.css carries a one-hour
+    max-age, so without this a visitor can hold new markup against an old
+    stylesheet for up to an hour. That combination renders incorrectly rather
+    than merely looking dated, which is far worse than a stale cache.
+    Appending the content hash means the two can never disagree: change the
+    CSS and the URL changes with it.
+    """
+    return hashlib.sha256((HERE / 'styles.css').read_bytes()).hexdigest()[:8]
+
+
+CSS_VER = css_version()
 
 MARK = (
     '<svg viewBox="0 0 64 64" aria-hidden="true">'
@@ -129,7 +147,7 @@ SHELL = """<!DOCTYPE html>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles.css?v={css_ver}">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -764,6 +782,26 @@ PAGES['terms.html'] = dict(
 
 # ══════════════════════════════════════════════════════════ write ══
 
+def stamp_index() -> None:
+    """Point index.html at the current stylesheet hash.
+
+    index.html is hand-maintained rather than generated, so it would otherwise
+    be the one page that could drift out of step with the others.
+    """
+    path = HERE / 'index.html'
+    src = path.read_text(encoding='utf-8')
+    out = re.sub(
+        r'href="/styles\.css(?:\?v=[^"]*)?"',
+        f'href="/styles.css?v={CSS_VER}"',
+        src,
+    )
+    if out != src:
+        path.write_text(out, encoding='utf-8')
+        print(f'  stamped index.html  (css v={CSS_VER})')
+    else:
+        print(f'  index.html already at css v={CSS_VER}')
+
+
 def main() -> None:
     for filename, cfg in PAGES.items():
         html = SHELL.format(
@@ -773,9 +811,11 @@ def main() -> None:
             nav=nav(cfg['nav_current']),
             body=cfg['body'],
             footer=FOOTER,
+            css_ver=CSS_VER,
         )
         (HERE / filename).write_text(html, encoding='utf-8')
         print(f'  wrote {filename}  ({len(html):,} bytes)')
+    stamp_index()
 
 
 if __name__ == '__main__':
