@@ -896,9 +896,9 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .sim-members li.is-in { opacity: 1; transform: none; }
 .sim-av {
   grid-area: av;
-  width: 1.7em; height: 1.7em; border-radius: 50%;
+  width: 2.1em; height: 2.1em; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
-  font-size: .72em; font-weight: 700;
+  font-size: .66em; font-weight: 700; letter-spacing: -.02em;
   color: var(--on-accent); background: var(--accent);
 }
 .sim-members li:nth-child(2) .sim-av { background: #6E8A73; }
@@ -934,7 +934,7 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .sim-prop-s { font-size: .8em; color: var(--muted); margin-bottom: .5em; }
 .sim-prop .sim-stat b { font-size: 1.2em; }
 .sim-votes { display: flex; align-items: center; margin-top: .6em; }
-.sim-votes .sim-av { width: 1.5em; height: 1.5em; font-size: .64em; margin-right: -.35em; border: 1.5px solid var(--surface); }
+.sim-votes .sim-av { width: 1.8em; height: 1.8em; font-size: .58em; margin-right: -.35em; border: 1.5px solid var(--surface); }
 .sim-votes em { font-size: .76em; font-style: normal; color: var(--muted); margin-left: .8em; }
 
 .sim-schemes { list-style: none; margin: 0; padding: 0; display: grid; gap: .42em; }
@@ -1007,7 +1007,11 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .sim-plate svg { width: 1.1em; height: 1.1em; }
 .sim-rows li.is-done .sim-plate { background: var(--accent); color: var(--on-accent); }
 .sim-rt { display: flex; flex-direction: column; min-width: 0; flex: 1; }
-.sim-rt b { font-size: .84em; font-weight: 600; color: var(--ink); line-height: 1.25;
+.sim-rt b { font-size: .84em; font-weight: 600; color: var(--ink); line-height: 1.25; }
+/* Row titles wrap rather than ellipsing — "Set your target purchase price"
+   needs 81px in a 57px column, and losing the last two words loses the point. */
+.sim-rows .sim-rt b { white-space: normal; }
+.sim-members .sim-rt b, .sim-docs .sim-rt b {
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .sim-rt em { font-size: .68em; font-style: normal; color: var(--muted);
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
