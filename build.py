@@ -225,10 +225,16 @@ def detail(*items) -> str:
 
 
 def step(n: str, label: str, title: str, body: str, extra: str,
-         pid: str, alt: str, flip: bool = False) -> str:
-    """One alternating step row: copy on one side, photograph on the other."""
+         pid: str = '', alt: str = '', flip: bool = False, media: str = '') -> str:
+    """One alternating step row: copy on one side, artwork on the other.
+
+    Most steps use a photograph. The document pack uses drawn artwork instead —
+    no stock photo says "six agreements populated from your figures", and the
+    living room that used to sit here said nothing at all.
+    """
+    art = media if media else photo(pid, alt, 'square', 900)
     return f"""<div class="alt-row reveal{' flip' if flip else ''}" style="margin-bottom:clamp(56px,7vw,96px)">
-  <div class="alt-media">{photo(pid, alt, 'square', 900)}</div>
+  <div class="alt-media">{art}</div>
   <div>
     <div class="step-big"><span class="n">{n}</span><span class="l">{label}</span></div>
     <h2 style="font-size:clamp(28px,3.6vw,40px)">{title}</h2>
@@ -319,6 +325,13 @@ def cap_table() -> str:
   </p>
 </div>"""
 
+
+PACK_ART = """<div class="pack">
+  <div class="pack-head"><span class="eyebrow">The pack</span><em>Six documents</em></div>
+  <ul class="pack-list"><li style="--i:0"><span class="pack-n">1</span><span class="pack-t"><b>Co-Ownership Agreement</b><em>Tenants in common · 14 pages</em></span></li><li style="--i:1"><span class="pack-n">2</span><span class="pack-t"><b>Household Expense Agreement</b><em>Shared costs and arrears · 6 pages</em></span></li><li style="--i:2"><span class="pack-n">3</span><span class="pack-t"><b>Mortgage Contribution Deed</b><em>Repayment shares · 5 pages</em></span></li><li style="--i:3"><span class="pack-n">4</span><span class="pack-t"><b>Statement of Position</b><em>One per member · 4 documents</em></span></li><li style="--i:4"><span class="pack-n">5</span><span class="pack-t"><b>Lender Presentation Pack</b><em>Factual compilation · 11 pages</em></span></li><li style="--i:5"><span class="pack-n">6</span><span class="pack-t"><b>Grant Application Packs</b><em>Pre-filled per scheme · 3 documents</em></span></li></ul>
+  <p class="pack-foot">Prepared from your house’s own figures. Intended for
+  independent legal review before anyone signs.</p>
+</div>"""
 
 PAGES = {}
 
@@ -429,8 +442,7 @@ PAGES['how-it-works.html'] = dict(
               'One fee per house. Not a subscription',
               'Intended for independent legal review before anyone signs',
           ),
-          'photo-1416339306562-f3d12fefd36f',
-          'Sunlit living room of a home being moved into, with a couch and bare walls')}
+          media=PACK_ART)}
 
   </div>
 </section>
@@ -596,15 +608,7 @@ PAGES['faq.html'] = dict(
       Something not covered? <a href="/contact.html">Get in touch</a>.
     </p>
   </div>
-</section>""" + figures(
-        ('$1.207m', 'Brisbane’s median house, August 2026'),
-        ('$30,000', 'First Home Owner Grant, on a new home under $750,000'),
-        ('$0', 'Transfer duty on a first new home — with no value cap'),
-        ('~$60,000', 'Deposit each, on a median house split four ways'),
-        eyebrow='Worth knowing',
-        note='Published figures as at August 2026. Confirm each against its official '
-             'source — CoHomed does not determine anyone’s eligibility.',
-    ) + closer('Still deciding?',
+</section>""" + closer('Still deciding?',
                'Set up a house for free and work through the Queensland schemes '
                'before you pay for anything.'),
 )
