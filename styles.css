@@ -476,6 +476,11 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .hero-media { position: relative; perspective: 1100px; margin-bottom: 88px; }
 @media (min-width: 901px) { .hero-media { margin-bottom: 60px; } }
 
+/* The device body. The captures carry a hairline bezel, a punch-hole camera
+   and the gesture bar already, but at 194px wide that hairline falls below a
+   pixel and the thing reads as a flat screenshot. So the physical frame is
+   built here, outside the image — and deliberately adds no notch or camera,
+   because the capture already has one. */
 .device {
   position: absolute;
   left: clamp(-14px, -2vw, -4px);
@@ -483,14 +488,40 @@ section.field .eyebrow { color: var(--on-accent-label); }
   width: clamp(146px, 17vw, 194px);
   aspect-ratio: 1080 / 2400;
   z-index: 1;
-  border-radius: 26px;
+  padding: 5px;
+  background: #17130F;
+  border-radius: 30px;
   transform-style: preserve-3d;
   will-change: transform;
   transition: transform .5s var(--ease);
-  /* The shadow lives on the frame, not the screenshots, so it stays put
-     while they cross-fade instead of dipping as two images pass through
-     half opacity. */
-  box-shadow: 0 30px 60px -24px rgba(40,24,14,.65);
+  /* Rim highlight suggests the polished edge; the warm drop shadow lives on
+     the frame rather than the screenshots so it holds steady while they
+     cross-fade instead of dipping as both pass through half opacity. */
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,.10),
+    0 30px 60px -24px rgba(40,24,14,.65);
+}
+
+/* Side buttons, in percentages so they track the frame as it scales. */
+.device::before,
+.device::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  width: 2px;
+  border-radius: 0 2px 2px 0;
+  background: #2C241D;
+}
+.device::before { top: 23%; height: 7%; }   /* volume */
+.device::after  { top: 34%; height: 11%; }  /* power  */
+
+.device-screen {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 25px;
+  overflow: hidden;
+  background: var(--canvas);
 }
 .device .shot {
   position: absolute;
@@ -498,7 +529,11 @@ section.field .eyebrow { color: var(--on-accent-label); }
   width: 100%;
   height: 100%;
   max-width: none;
+  border-radius: 0;
   box-shadow: none;
+  /* The bezel makes the screen box a hair shorter than 1080:2400, so cover
+     rather than stretch. The crop is around a pixel. */
+  object-fit: cover;
   opacity: 0;
   transition: opacity .6s ease;
 }
@@ -538,7 +573,9 @@ section.field .eyebrow { color: var(--on-accent-label); }
 }
 @media (max-width: 640px) {
   .hero-media .photo.tall { aspect-ratio: 4 / 3.2; }
-  .device { width: 124px; bottom: -10px; left: -4px; }
+  /* Thinner bezel and tighter corners at 124px, or the frame eats the screen. */
+  .device { width: 124px; bottom: -10px; left: -4px; padding: 4px; border-radius: 24px; }
+  .device-screen { border-radius: 20px; }
   .device-ui { width: 124px; bottom: -74px; left: -4px; }
 }
 
