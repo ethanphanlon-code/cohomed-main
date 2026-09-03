@@ -1107,3 +1107,48 @@ section.field .eyebrow { color: var(--on-accent-label); }
 /* Slide the tab bar away for the stack routes. */
 .sim-tabs { transition: transform .45s var(--ease), opacity .35s ease; }
 .sim.is-stack .sim-tabs { transform: translateY(110%); opacity: 0; }
+
+
+/* ---- sim: house code and summary, income screen ---- */
+
+.sim-code {
+  display: flex; flex-direction: column; align-items: center; gap: .45em;
+  background: var(--accent-wash);
+  border: 1px dashed var(--accent-dash);
+  border-radius: 1.1em;
+  padding: 1em .8em;
+  opacity: 0; transform: scale(.94);
+  transition: opacity .4s ease, transform .45s var(--ease);
+}
+.sim-code.is-in { opacity: 1; transform: none; }
+.sim-code b {
+  font-size: 1.6em; font-weight: 800; letter-spacing: .16em;
+  color: var(--accent-deep); font-variant-numeric: tabular-nums;
+}
+.sim-code em {
+  font-size: .68em; font-style: normal; line-height: 1.35;
+  color: var(--muted); text-align: center;
+}
+
+.sim-summary { list-style: none; margin: 0; padding: 0;
+  background: var(--surface); border: 1px solid var(--border-soft);
+  border-radius: 1.1em; overflow: hidden; }
+.sim-summary li {
+  display: flex; align-items: center; justify-content: space-between; gap: .6em;
+  padding: .65em .9em;
+  opacity: 0; transform: translateY(.4em);
+  transition: opacity .32s ease, transform .36s var(--ease);
+}
+.sim-summary li.is-in { opacity: 1; transform: none; }
+.sim-summary li + li { border-top: 1px solid var(--border-soft); }
+.sim-summary span { font-size: .76em; color: var(--muted); }
+.sim-summary b { font-size: .8em; font-weight: 600; color: var(--ink);
+  text-align: right; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.sim-notebox {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: .8em;
+  padding: .7em .8em;
+  font-size: .74em; line-height: 1.4; color: var(--muted-deep);
+}
