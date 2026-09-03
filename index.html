@@ -571,13 +571,31 @@
 
     if (window.matchMedia('(pointer: fine)').matches) {
       let raf = null;
+      const clamp = (v) => (v < -1 ? -1 : v > 1 ? 1 : v);
+
       media.addEventListener('pointermove', (e) => {
         if (raf) return;
         raf = requestAnimationFrame(() => {
           raf = null;
           const r = media.getBoundingClientRect();
-          const x = (e.clientX - r.left) / r.width  - 0.5;
-          const y = (e.clientY - r.top)  / r.height - 0.5;
+
+          /* Pivot on the centre of the phone, not the centre of the photo
+             block — the device hangs off the bottom-left corner, so those are
+             nowhere near each other and the rest position looked off.
+
+             offsetLeft/offsetTop are layout values and therefore immune to the
+             transform being applied. Reading device.getBoundingClientRect()
+             here would feed the rotation back into its own input and jitter. */
+          const cx = r.left + device.offsetLeft + device.offsetWidth  / 2;
+          const cy = r.top  + device.offsetTop  + device.offsetHeight / 2;
+
+          /* Falls off over half the photo block, so the tilt still builds
+             gradually rather than maxing out the moment the pointer clears the
+             phone's own edge. Clamped, because the block is far wider to the
+             right of the device than to the left. */
+          const x = clamp((e.clientX - cx) / (r.width  / 2));
+          const y = clamp((e.clientY - cy) / (r.height / 2));
+
           device.style.transition = 'transform .12s linear';
           device.style.transform =
             'rotateY(' + (x * 13).toFixed(2) + 'deg) rotateX(' + (-y * 9).toFixed(2) + 'deg) translateZ(22px)';
