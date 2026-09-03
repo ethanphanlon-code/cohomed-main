@@ -14,10 +14,13 @@
   --accent-label:  #7C9280;
   --accent-dash:   #A7BBA9;
 
-  /* On a solid sage field */
+  /* On a solid sage field.
+     label and body were 3.47:1 and 4.44:1 against sage — both under WCAG AA for
+     normal text. They were never caught because section.field was defined but
+     unused until the figures band. Lightened to 4.83:1 and 5.17:1. */
   --on-accent:       #FFF9F3;
-  --on-accent-label: #B9CBBB;
-  --on-accent-body:  #D8E2D9;
+  --on-accent-label: #E3EAE4;
+  --on-accent-body:  #EDF1EC;
 
   /* Clay — rationed to attention states and chart series only */
   --clay:      #C25A38;
@@ -259,6 +262,20 @@ section.field .eyebrow { color: var(--on-accent-label); }
   color: var(--ink);
 }
 .btn-secondary:hover { background: #fff; border-color: var(--ink); color: var(--ink); }
+
+/* Secondary action sitting on a sage field — outlined rather than filled, so
+   the two buttons in a closer do not compete. */
+.btn-ghost-accent {
+  background: transparent;
+  border: 1px solid rgba(255,249,243,.42);
+  color: var(--on-accent);
+}
+.btn-ghost-accent:hover {
+  background: rgba(255,249,243,.12);
+  border-color: var(--on-accent);
+  color: var(--on-accent);
+  transform: translateY(-2px);
+}
 
 .btn-on-accent { background: var(--on-accent); color: var(--accent-deep); }
 .btn-on-accent:hover { background: var(--surface-lift); color: var(--accent-deep); transform: translateY(-2px); }
@@ -1251,7 +1268,19 @@ section.field .eyebrow { color: var(--on-accent-label); }
   }
 }
 
-/* ---- comparison pair: what you lose against what you keep ---- */
+/* ---- comparison pair ----
+   Both halves carry colour. One clay card beside a plain cream one read as an
+   error state rather than a comparison; paired, they read as loss against gain. */
+.card-gain {
+  background: var(--accent-wash);
+  border: 1px solid var(--accent-wash-b);
+  border-radius: 20px;
+  padding: clamp(22px, 2.4vw, 32px);
+}
+.card-gain .ico { color: var(--accent); }
+.card-gain h3 { color: var(--accent-deep); }
+.card-gain p { color: var(--ink-soft); }
+
 .card-loss {
   background: #FBEFE9;
   border: 1px solid #EBC9B8;
@@ -1260,6 +1289,7 @@ section.field .eyebrow { color: var(--on-accent-label); }
 }
 .card-loss .ico { color: var(--clay); }
 .card-loss h3 { color: var(--clay-deep); }
+.card-loss p { color: var(--ink-soft); }
 
 /* ---- "what we don't" reads as caution, not as a second list of features ---- */
 .ticks.ticks--no li { color: var(--muted); }

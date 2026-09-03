@@ -240,6 +240,86 @@ def step(n: str, label: str, title: str, body: str, extra: str,
 
 # ══════════════════════════════════════════════════════════ pages ══
 
+
+# ── sage bands ─────────────────────────────────────────────────────────────
+# The supporting pages were entirely cream, like the landing page used to be.
+# These give every page at least one solid-sage moment and a closing ask, so
+# the colour system carries across the site rather than living on one page.
+
+def figures(*items, eyebrow: str = 'The numbers', note: str = '') -> str:
+    """Full-bleed sage band of large figures."""
+    figs = ''.join(f'<div class="fig reveal"><b>{v}</b><span>{c}</span></div>' for v, c in items)
+    fine = (f'<p class="fine reveal" style="color:var(--on-accent-label);'
+            f'margin-top:clamp(24px,3vw,34px)">{note}</p>') if note else ''
+    return f"""<section class="field">
+  <div class="wrap">
+    <span class="eyebrow reveal">{eyebrow}</span>
+    <div class="figs" style="margin-top:clamp(26px,3vw,38px)">{figs}</div>
+    {fine}
+  </div>
+</section>"""
+
+
+def closer(title: str, body: str) -> str:
+    """Closing ask, in sage, so every page ends on the same note."""
+    return f"""<section class="field" style="text-align:center">
+  <div class="wrap">
+    <div class="reveal" style="max-width:40em;margin-inline:auto">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin:14px 0 16px">{title}</h2>
+      <p class="lead" style="max-width:34em;margin-inline:auto">{body}</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px">
+        <a class="btn btn-on-accent" href="/#get-started">Get the app</a>
+        <a class="btn btn-ghost-accent" href="/how-it-works.html">See how it works</a>
+      </div>
+    </div>
+  </div>
+</section>"""
+
+
+CAP_ROWS = [
+    ('First Home Owner Grant', True, True, ''),
+    ('First home (new home) duty concession', True, True, 'Assessed on each person’s share'),
+    ('Boost to Buy', True, False, 'Thresholds stop at two adults'),
+    ('First Home Guarantee', True, False, 'Maximum two applicants'),
+]
+
+_TICK = ('<span class="cap-y"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+         'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+         '<path d="M20 6 9 17l-5-5"/></svg><em class="sr-only">Available</em></span>')
+_CROSS = ('<span class="cap-n"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
+          'stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
+          '<path d="M18 6 6 18M6 6l12 12"/></svg><em class="sr-only">Not available</em></span>')
+
+
+def cap_table() -> str:
+    """Applicant caps by house size — the finding no competitor is publishing."""
+    rows = ''.join(
+        f'<div class="cap-row"><div class="cap-name"><b>{n}</b>'
+        f'{f"<em>{note}</em>" if note else ""}</div>'
+        f'<div class="cap-c" data-h="2 people">{_TICK if a else _CROSS}</div>'
+        f'<div class="cap-c" data-h="3–4 people">{_TICK if b else _CROSS}</div></div>'
+        for n, a, b, note in CAP_ROWS)
+    return f"""<div class="cap reveal">
+  <div class="cap-head">
+    <h3>Half the help stops at two people.</h3>
+    <p>Two of the four schemes cap applicants at two. If you are buying as a house
+    of three or four they are closed to you, and almost nobody tells you that
+    before you have spent money finding out.</p>
+  </div>
+  <div class="cap-grid">
+    <div class="cap-row cap-row--head"><div></div>
+      <div class="cap-c">2 people</div><div class="cap-c">3–4 people</div></div>
+    {rows}
+  </div>
+  <p class="fine" style="margin-top:18px">
+    Published criteria as at 28 August 2026, and they change without notice. This
+    is a comparison of published rules, not a determination of anyone’s
+    eligibility — confirm each with the administering body.
+  </p>
+</div>"""
+
+
 PAGES = {}
 
 # ---------------------------------------------------------------- how it works
@@ -492,6 +572,13 @@ FAQ_ITEMS = [
      'rules with Housing Australia.'),
 ]
 
+PAGES['how-it-works.html']['body'] += (
+    '<section class="tint"><div class="wrap">' + cap_table() + '</div></section>'
+    + closer('Ready to see where your house stands?',
+             'Set it up, invite the others, and work through the schemes before you '
+             'spend anything.')
+)
+
 PAGES['faq.html'] = dict(
     title='Frequently asked questions — CoHomed',
     desc='What CoHomed does, what it costs, why Queensland only, and where you still need a solicitor.',
@@ -509,7 +596,17 @@ PAGES['faq.html'] = dict(
       Something not covered? <a href="/contact.html">Get in touch</a>.
     </p>
   </div>
-</section>""",
+</section>""" + figures(
+        ('$1.207m', 'Brisbane’s median house, August 2026'),
+        ('$30,000', 'First Home Owner Grant, on a new home under $750,000'),
+        ('$0', 'Transfer duty on a first new home — with no value cap'),
+        ('~$60,000', 'Deposit each, on a median house split four ways'),
+        eyebrow='Worth knowing',
+        note='Published figures as at August 2026. Confirm each against its official '
+             'source — CoHomed does not determine anyone’s eligibility.',
+    ) + closer('Still deciding?',
+               'Set up a house for free and work through the Queensland schemes '
+               'before you pay for anything.'),
 )
 
 # ---------------------------------------------------------------------- about
@@ -800,6 +897,17 @@ def stamp_index() -> None:
         print(f'  stamped index.html  (css v={CSS_VER})')
     else:
         print(f'  index.html already at css v={CSS_VER}')
+
+
+# The legal pages stay plain — a marketing band under a privacy policy reads
+# badly — but everything else closes on the same sage ask.
+for _pg, _t, _b in [
+    ('about.html', 'Buying with people you trust?',
+     'Set up a house, see where you stand, and only pay when you want the documents.'),
+    ('contact.html', 'Ready when you are.',
+     'Set up a house for free and see where your group stands before spending anything.'),
+]:
+    PAGES[_pg]['body'] += closer(_t, _b)
 
 
 def main() -> None:
