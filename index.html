@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=4c3aa25a">
+<link rel="stylesheet" href="/styles.css?v=c112a691">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -95,24 +95,85 @@
 
       <div class="device frame" id="device">
         <div class="frame-screen">
-          <img class="shot is-on" src="/assets/screens/home.png"
-               alt="The CoHomed home screen showing The Kelvin Grove House at 75% readiness"
-               width="1080" height="2400" fetchpriority="high" decoding="async">
-          <img class="shot" src="/assets/screens/house.png" alt=""
-               width="1080" height="2400" fetchpriority="low" decoding="async">
-          <img class="shot" src="/assets/screens/documents.png" alt=""
-               width="1080" height="2400" fetchpriority="low" decoding="async">
+          <!-- A live recreation of the app, not a screenshot. The markup below
+               is the FINISHED state — every number, tick and ring is already
+               correct. The script rewinds it and plays it forward, so with no
+               JS (or under prefers-reduced-motion) a visitor sees a complete,
+               truthful screen rather than an empty one. -->
+          <div class="sim" id="sim">
+
+            <div class="sim-screen is-front" data-screen="0">
+              <div class="sim-top">
+                <span class="sim-logo">
+                  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>
+                  CoHomed
+                </span>
+                <span class="sim-pill">QLD</span>
+              </div>
+
+              <div class="sim-card sim-card--tint">
+                <span class="sim-eyebrow">Readiness</span>
+                <p class="sim-title">The Kelvin Grove House</p>
+                <div class="sim-ring-row">
+                  <div class="sim-ring-wrap">
+                    <svg class="sim-ring" viewBox="0 0 44 44" aria-hidden="true">
+                      <circle class="sim-ring-bg" cx="22" cy="22" r="19"/>
+                      <circle class="sim-ring-fg" cx="22" cy="22" r="19" id="simRing"/>
+                    </svg>
+                    <span class="sim-ring-num"><b id="simPct">75</b></span>
+                  </div>
+                  <ul class="sim-checks" id="simChecks">
+                    <li class="is-done"><i></i>House created</li>
+                    <li class="is-done"><i></i>Members joined</li>
+                    <li class="is-done"><i></i>Target set</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="sim-card">
+                <span class="sim-eyebrow">The house</span>
+                <div class="sim-avatars" id="simAvatars">
+                  <span class="is-in" style="--i:0">E</span><span class="is-in" style="--i:1">P</span><span class="is-in" style="--i:2">M</span><span class="is-in" style="--i:3">J</span>
+                </div>
+                <p class="sim-stat"><b id="simPool">$116,000</b><span>Deposit pool</span></p>
+              </div>
+
+              <div class="sim-card sim-next is-in" id="simNext">
+                <span class="sim-eyebrow">Next</span>
+                <p>Your document pack is ready to prepare.</p>
+              </div>
+            </div>
+
+            <div class="sim-screen" data-screen="1">
+              <div class="sim-top">
+                <span class="sim-logo">
+                  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>
+                  CoHomed
+                </span>
+                <span class="sim-pill">QLD</span>
+              </div>
+
+              <div class="sim-card">
+                <span class="sim-eyebrow">Documents</span>
+                <ul class="sim-docs" id="simDocs">
+                  <li class="is-done"><i></i>Co-ownership agreement</li>
+                  <li class="is-done"><i></i>Household expenses</li>
+                  <li class="is-done"><i></i>Mortgage contribution</li>
+                  <li class="is-done"><i></i>Statements of position</li>
+                  <li class="is-done"><i></i>Lender pack</li>
+                  <li class="is-done"><i></i>Scheme packs</li>
+                </ul>
+              </div>
+              <div class="sim-cta" id="simCta">Ready to sign</div>
+            </div>
+
+            <div class="sim-tabs">
+              <span class="is-on"></span><span></span><span></span><span></span><span></span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="device-ui" id="deviceUi" hidden>
-        <p class="device-cap" id="deviceCap" aria-live="polite">Where the house is up to</p>
-        <div class="device-dots" id="deviceDots">
-          <button type="button" aria-label="Home screen" aria-pressed="true"></button>
-          <button type="button" aria-label="House and split" aria-pressed="false"></button>
-          <button type="button" aria-label="Documents" aria-pressed="false"></button>
-        </div>
-      </div>
     </div>
 
   </div>
@@ -505,71 +566,113 @@
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  /* ---- Hero device: pointer tilt + screen cycle -------------------------
-     Two independent behaviours, both optional. The tilt only runs on a fine
-     pointer, because on touch there is nothing to follow. The cycle runs
-     everywhere. Either can fail without taking the other down, and the
-     markup already renders correctly with neither. */
+  /* ---- Hero device: live app simulation + pointer tilt ------------------
+     The markup is authored in its finished state, so this script's first job
+     is to rewind it. If any of this fails, or motion is unwelcome, the visitor
+     is left looking at a complete and accurate screen rather than an empty
+     one — which is why nothing here builds DOM. */
   (function () {
     const media  = document.getElementById('heroMedia');
     const device = document.getElementById('device');
-    const ui     = document.getElementById('deviceUi');
-    const cap    = document.getElementById('deviceCap');
-    const dots   = document.getElementById('deviceDots');
-    if (!media || !device || !ui) return;
+    const sim    = document.getElementById('sim');
+    if (!media || !device || !sim) return;
 
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (calm.matches) return;
 
-    const shots = Array.from(device.querySelectorAll('.shot'));
-    const btns  = Array.from(dots.querySelectorAll('button'));
-    const CAPS  = [
-      'Track where the house is up to',
-      'Shares update as each person adds theirs',
-      'Six documents, ready to sign'
-    ];
-    // Real alt text follows the active screen so the picture a screen reader
-    // is told about is the one actually showing.
-    const ALTS = [
-      'The CoHomed home screen showing The Kelvin Grove House at 75% readiness',
-      'The House tab showing four members and the ownership split',
-      'The Documents tab showing six documents ready to sign'
-    ];
+    /* ---- the simulation ---- */
+    if (!calm.matches) {
+      const screens = Array.from(sim.querySelectorAll('.sim-screen'));
+      const checks  = Array.from(sim.querySelectorAll('#simChecks li'));
+      const docs    = Array.from(sim.querySelectorAll('#simDocs li'));
+      const avatars = Array.from(sim.querySelectorAll('#simAvatars span'));
+      const tabs    = Array.from(sim.querySelectorAll('.sim-tabs span'));
+      const ring    = document.getElementById('simRing');
+      const pct     = document.getElementById('simPct');
+      const pool    = document.getElementById('simPool');
+      const cta     = document.getElementById('simCta');
 
-    let i = 0, timer = null, held = false;
+      const CIRC = 119.4;
+      const POOL = 116000;
+      const money = (n) => '$' + Math.round(n).toLocaleString('en-AU');
 
-    function show(n) {
-      i = (n + shots.length) % shots.length;
-      shots.forEach((s, x) => {
-        s.classList.toggle('is-on', x === i);
-        s.alt = x === i ? ALTS[x] : '';
-      });
-      btns.forEach((b, x) => b.setAttribute('aria-pressed', String(x === i)));
-      cap.textContent = CAPS[i];
+      let timers = [];
+      let counter = null;
+      const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+      function reset() {
+        timers.forEach(clearTimeout); timers = [];
+        if (counter) { cancelAnimationFrame(counter); counter = null; }
+        screens[0].className = 'sim-screen is-front';
+        screens[1].className = 'sim-screen';
+        checks.forEach((c) => c.classList.remove('is-done'));
+        docs.forEach((d) => d.classList.remove('is-done'));
+        avatars.forEach((a) => a.classList.remove('is-in'));
+        cta.classList.remove('is-in');
+        document.getElementById('simNext').classList.remove('is-in');
+        tabs.forEach((t, i) => t.classList.toggle('is-on', i === 0));
+        ring.style.transition = 'none';
+        ring.style.strokeDashoffset = CIRC;
+        pct.textContent = '0';
+        pool.textContent = money(0);
+        void ring.getBoundingClientRect();          // flush, so the sweep animates
+        ring.style.transition = '';
+      }
+
+      /* Counts a number up on an ease-out curve. Rounded on every frame — a
+         raw lerp shows float dust like $115,999.9997. */
+      function countTo(el, to, ms, fmt) {
+        const t0 = performance.now();
+        (function step(now) {
+          const k = Math.min(1, (now - t0) / ms);
+          const e = 1 - Math.pow(1 - k, 3);
+          el.textContent = fmt(to * e);
+          if (k < 1) counter = requestAnimationFrame(step);
+        })(t0);
+      }
+
+      function play() {
+        reset();
+        at(600,  () => checks[0].classList.add('is-done'));
+        avatars.forEach((a, i) => at(1400 + i * 320, () => a.classList.add('is-in')));
+        at(2700, () => checks[1].classList.add('is-done'));
+        at(3100, () => countTo(pool, POOL, 1600, money));
+        at(4900, () => checks[2].classList.add('is-done'));
+        at(5200, () => {
+          ring.style.strokeDashoffset = CIRC * 0.25;   // 75%
+          countTo(pct, 75, 1500, (v) => String(Math.round(v)));
+        });
+        at(6900, () => document.getElementById('simNext').classList.add('is-in'));
+        at(7600, () => {
+          screens[0].className = 'sim-screen is-back';
+          screens[1].className = 'sim-screen is-front';
+          tabs.forEach((t, i) => t.classList.toggle('is-on', i === 3));
+        });
+        docs.forEach((d, i) => at(8500 + i * 340, () => d.classList.add('is-done')));
+        at(10900, () => cta.classList.add('is-in'));
+        at(14000, play);
+      }
+
+      let running = false;
+      const start = () => { if (!running) { running = true; play(); } };
+      const stop  = () => {
+        running = false;
+        timers.forEach(clearTimeout); timers = [];
+        if (counter) { cancelAnimationFrame(counter); counter = null; }
+      };
+
+      /* Only run while it is actually on screen and the tab is focused. */
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver((es) => {
+          es.forEach((e) => (e.isIntersecting ? start() : stop()));
+        }, { threshold: 0.2 }).observe(media);
+      } else {
+        start();
+      }
+      document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
     }
 
-    function play()  { stop(); if (!held) timer = setInterval(() => show(i + 1), 4200); }
-    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
-
-    btns.forEach((b, x) => b.addEventListener('click', () => {
-      held = true; stop(); show(x);
-      // Resume after a pause so one click doesn't freeze it forever.
-      setTimeout(() => { held = false; play(); }, 9000);
-    }));
-
-    ui.hidden = false;
-    show(0);
-    play();
-
-    // Pause while the hero is off screen — no point animating what nobody sees.
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver((es) => {
-        es.forEach((e) => (e.isIntersecting ? play() : stop()));
-      }, { threshold: 0.15 }).observe(media);
-    }
-    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
-
-    if (window.matchMedia('(pointer: fine)').matches) {
+    /* ---- pointer tilt ---- */
+    if (!calm.matches && window.matchMedia('(pointer: fine)').matches) {
       let raf = null;
       const clamp = (v) => (v < -1 ? -1 : v > 1 ? 1 : v);
 
@@ -581,7 +684,7 @@
 
           /* Pivot on the centre of the phone, not the centre of the photo
              block — the device hangs off the bottom-left corner, so those are
-             nowhere near each other and the rest position looked off.
+             nowhere near each other.
 
              offsetLeft/offsetTop are layout values and therefore immune to the
              transform being applied. Reading device.getBoundingClientRect()
@@ -589,10 +692,6 @@
           const cx = r.left + device.offsetLeft + device.offsetWidth  / 2;
           const cy = r.top  + device.offsetTop  + device.offsetHeight / 2;
 
-          /* Falls off over half the photo block, so the tilt still builds
-             gradually rather than maxing out the moment the pointer clears the
-             phone's own edge. Clamped, because the block is far wider to the
-             right of the device than to the left. */
           const x = clamp((e.clientX - cx) / (r.width  / 2));
           const y = clamp((e.clientY - cy) / (r.height / 2));
 
