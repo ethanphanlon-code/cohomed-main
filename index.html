@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=c112a691">
+<link rel="stylesheet" href="/styles.css?v=1389d9f3">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -95,85 +95,41 @@
 
       <div class="device frame" id="device">
         <div class="frame-screen">
-          <!-- A live recreation of the app, not a screenshot. The markup below
-               is the FINISHED state — every number, tick and ring is already
-               correct. The script rewinds it and plays it forward, so with no
-               JS (or under prefers-reduced-motion) a visitor sees a complete,
-               truthful screen rather than an empty one. -->
           <div class="sim" id="sim">
-
-            <div class="sim-screen is-front" data-screen="0">
-              <div class="sim-top">
-                <span class="sim-logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>
-                  CoHomed
-                </span>
-                <span class="sim-pill">QLD</span>
-              </div>
-
-              <div class="sim-card sim-card--tint">
-                <span class="sim-eyebrow">Readiness</span>
-                <p class="sim-title">The Kelvin Grove House</p>
-                <div class="sim-ring-row">
-                  <div class="sim-ring-wrap">
-                    <svg class="sim-ring" viewBox="0 0 44 44" aria-hidden="true">
-                      <circle class="sim-ring-bg" cx="22" cy="22" r="19"/>
-                      <circle class="sim-ring-fg" cx="22" cy="22" r="19" id="simRing"/>
-                    </svg>
-                    <span class="sim-ring-num"><b id="simPct">75</b></span>
-                  </div>
-                  <ul class="sim-checks" id="simChecks">
-                    <li class="is-done"><i></i>House created</li>
-                    <li class="is-done"><i></i>Members joined</li>
-                    <li class="is-done"><i></i>Target set</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div class="sim-card">
-                <span class="sim-eyebrow">The house</span>
-                <div class="sim-avatars" id="simAvatars">
-                  <span class="is-in" style="--i:0">E</span><span class="is-in" style="--i:1">P</span><span class="is-in" style="--i:2">M</span><span class="is-in" style="--i:3">J</span>
-                </div>
-                <p class="sim-stat"><b id="simPool">$116,000</b><span>Deposit pool</span></p>
-              </div>
-
-              <div class="sim-card sim-next is-in" id="simNext">
-                <span class="sim-eyebrow">Next</span>
-                <p>Your document pack is ready to prepare.</p>
-              </div>
-            </div>
-
-            <div class="sim-screen" data-screen="1">
-              <div class="sim-top">
-                <span class="sim-logo">
-                  <svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>
-                  CoHomed
-                </span>
-                <span class="sim-pill">QLD</span>
-              </div>
-
-              <div class="sim-card">
-                <span class="sim-eyebrow">Documents</span>
-                <ul class="sim-docs" id="simDocs">
-                  <li class="is-done"><i></i>Co-ownership agreement</li>
-                  <li class="is-done"><i></i>Household expenses</li>
-                  <li class="is-done"><i></i>Mortgage contribution</li>
-                  <li class="is-done"><i></i>Statements of position</li>
-                  <li class="is-done"><i></i>Lender pack</li>
-                  <li class="is-done"><i></i>Scheme packs</li>
-                </ul>
-              </div>
-              <div class="sim-cta" id="simCta">Ready to sign</div>
-            </div>
-
-            <div class="sim-tabs">
-              <span class="is-on"></span><span></span><span></span><span></span><span></span>
-            </div>
+            <div class="sim-screen is-front" data-s="0"><div class="sim-top"><span class="sim-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>CoHomed</span><span class="sim-pill">QLD</span></div>
+<div class="sim-card sim-card--tint">
+<span class="sim-eyebrow">Readiness</span>
+<p class="sim-title">The Kelvin Grove House</p>
+<div class="sim-ring-row">
+<div class="sim-ring-wrap"><svg class="sim-ring" viewBox="0 0 44 44" aria-hidden="true"><circle class="sim-ring-bg" cx="22" cy="22" r="19"/><circle class="sim-ring-fg" cx="22" cy="22" r="19" id="simRing"/></svg><span class="sim-ring-num"><b id="simPct">75</b></span></div>
+<ul class="sim-checks" id="simChecks">
+<li class="is-done"><i></i>House created</li><li class="is-done"><i></i>Members joined</li><li class="is-done"><i></i>Details complete</li><li class="is-done"><i></i>Target set</li></ul>
+</div></div>
+<div class="sim-card"><span class="sim-eyebrow">At a glance</span>
+<div class="sim-duo"><p class="sim-stat"><b id="simTarget">$840,000</b><span>Target price</span></p><p class="sim-stat"><b id="simPool">$116,000</b><span>Deposit pool</span></p></div></div>
+</div><div class="sim-screen" data-s="1"><div class="sim-top"><span class="sim-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>CoHomed</span><span class="sim-pill">QLD</span></div>
+<span class="sim-eyebrow">Your house</span><p class="sim-title sim-title--sm">Members and split</p>
+<ul class="sim-members" id="simMembers"><li class="is-in"><span class="sim-av">AW</span><span class="sim-mname">Alex Whitmore</span><span class="sim-share"><b>36%</b></span><span class="sim-bar"><i style="--w:36%"></i></span></li><li class="is-in"><span class="sim-av">PR</span><span class="sim-mname">Priya Raman</span><span class="sim-share"><b>27%</b></span><span class="sim-bar"><i style="--w:27%"></i></span></li><li class="is-in"><span class="sim-av">MO</span><span class="sim-mname">Mel Okafor</span><span class="sim-share"><b>22%</b></span><span class="sim-bar"><i style="--w:22%"></i></span></li><li class="is-in"><span class="sim-av">SR</span><span class="sim-mname">Sam Reid</span><span class="sim-share"><b>15%</b></span><span class="sim-bar"><i style="--w:15%"></i></span></li></ul>
+<div class="sim-card sim-card--tint sim-foot"><span class="sim-eyebrow">Ownership split</span><p>Calculated from what each person contributes.</p></div>
+</div><div class="sim-screen" data-s="2"><div class="sim-top"><span class="sim-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>CoHomed</span><span class="sim-pill">QLD</span></div>
+<span class="sim-eyebrow">Shortlist</span><p class="sim-title sim-title--sm">Properties you are considering</p>
+<div class="sim-card sim-prop is-in" id="simProp">
+<p class="sim-prop-a">14 Prospect Terrace</p><p class="sim-prop-s">Kelvin Grove · 3 bed</p>
+<p class="sim-stat"><b>$815,000</b><span>Asking</span></p>
+<div class="sim-votes"><span class="sim-av">AW</span><span class="sim-av">PR</span><span class="sim-av">MO</span><em>3 of 4 voted yes</em></div>
+</div></div><div class="sim-screen" data-s="3"><div class="sim-top"><span class="sim-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>CoHomed</span><span class="sim-pill">QLD</span></div>
+<span class="sim-eyebrow">Queensland</span><p class="sim-title sim-title--sm">Grants and schemes</p>
+<ul class="sim-schemes" id="simSchemes"><li class="is-in"><span class="sim-sname">First Home Owner Grant</span><span class="sim-chip sim-chip--ok">$30,000</span></li><li class="is-in"><span class="sim-sname">First home (new home)</span><span class="sim-chip sim-chip--ok">Duty nil</span></li><li class="is-in"><span class="sim-sname">Boost to Buy</span><span class="sim-chip sim-chip--warn">2 applicants</span></li><li class="is-in"><span class="sim-sname">First Home Guarantee</span><span class="sim-chip sim-chip--warn">2 applicants</span></li></ul>
+<div class="sim-card sim-card--warn sim-foot"><p>Two schemes cap applicants at two. Your house has four.</p></div>
+</div><div class="sim-screen" data-s="4"><div class="sim-top"><span class="sim-logo"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="6" y="6" width="52" height="52" rx="13" fill="none" stroke="currentColor" stroke-width="7"/><path d="M19 34 32 22l13 12v13H19V34Z" fill="currentColor"/></svg>CoHomed</span><span class="sim-pill">QLD</span></div>
+<span class="sim-eyebrow">Document pack</span>
+<ul class="sim-docs" id="simDocs"><li class="is-done"><i></i><span><b>Co-Ownership Agreement</b><em>Tenants in common · 14 pages</em></span></li><li class="is-done"><i></i><span><b>Household Expense Agreement</b><em>Shared costs · 6 pages</em></span></li><li class="is-done"><i></i><span><b>Mortgage Contribution Deed</b><em>Repayment shares · 5 pages</em></span></li><li class="is-done"><i></i><span><b>Statement of Position</b><em>One per member · 4 docs</em></span></li><li class="is-done"><i></i><span><b>Lender Presentation Pack</b><em>Factual compilation · 11 pages</em></span></li><li class="is-done"><i></i><span><b>Grant Application Packs</b><em>Pre-filled per scheme · 3 docs</em></span></li></ul>
+<div class="sim-cta" id="simCta">Ready to sign</div>
+</div>
+            <div class="sim-tabs" id="simTabs"><span class="is-on"><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span><span class=""><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span><span class=""><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg></span><span class=""><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg></span><span class=""><svg class="" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></span></div>
           </div>
         </div>
       </div>
-
     </div>
 
   </div>
@@ -566,11 +522,16 @@
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
 
-  /* ---- Hero device: live app simulation + pointer tilt ------------------
-     The markup is authored in its finished state, so this script's first job
-     is to rewind it. If any of this fails, or motion is unwelcome, the visitor
-     is left looking at a complete and accurate screen rather than an empty
-     one — which is why nothing here builds DOM. */
+  /* ---- Hero device: a live walkthrough of the app -----------------------
+     Five screens, driven by one timeline. The markup is authored in its
+     FINISHED state — every number, tick, bar and chip is already correct — so
+     this script's first job is to rewind it. With no JS, or under
+     prefers-reduced-motion, the visitor is left on a complete and accurate
+     first screen rather than an empty one. Nothing here builds DOM.
+
+     Content is lifted from the real app: member names and shares, the six
+     document titles, the milestone labels and the tab icons all come from
+     app-mobile, so this stays truthful rather than illustrative. */
   (function () {
     const media  = document.getElementById('heroMedia');
     const device = document.getElementById('device');
@@ -579,77 +540,103 @@
 
     const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-    /* ---- the simulation ---- */
     if (!calm.matches) {
-      const screens = Array.from(sim.querySelectorAll('.sim-screen'));
-      const checks  = Array.from(sim.querySelectorAll('#simChecks li'));
-      const docs    = Array.from(sim.querySelectorAll('#simDocs li'));
-      const avatars = Array.from(sim.querySelectorAll('#simAvatars span'));
-      const tabs    = Array.from(sim.querySelectorAll('.sim-tabs span'));
+      const q = (sel) => Array.from(sim.querySelectorAll(sel));
+      const screens = q('.sim-screen');
+      const checks  = q('#simChecks li');
+      const members = q('#simMembers li');
+      const schemes = q('#simSchemes li');
+      const docs    = q('#simDocs li');
+      const tabs    = q('#simTabs span');
+      const prop    = document.getElementById('simProp');
+      const cta     = document.getElementById('simCta');
       const ring    = document.getElementById('simRing');
       const pct     = document.getElementById('simPct');
       const pool    = document.getElementById('simPool');
-      const cta     = document.getElementById('simCta');
+      const target  = document.getElementById('simTarget');
 
       const CIRC = 119.4;
-      const POOL = 116000;
       const money = (n) => '$' + Math.round(n).toLocaleString('en-AU');
+      /* Which tab lights up on each screen. */
+      const TAB_FOR = [0, 1, 2, 0, 3];
 
       let timers = [];
-      let counter = null;
+      let raf = null;
       const at = (ms, fn) => timers.push(setTimeout(fn, ms));
+
+      function show(n) {
+        screens.forEach((el, i) => {
+          el.classList.toggle('is-front', i === n);
+          el.classList.toggle('is-back',  i <  n);
+        });
+        tabs.forEach((t, i) => t.classList.toggle('is-on', i === TAB_FOR[n]));
+      }
 
       function reset() {
         timers.forEach(clearTimeout); timers = [];
-        if (counter) { cancelAnimationFrame(counter); counter = null; }
-        screens[0].className = 'sim-screen is-front';
-        screens[1].className = 'sim-screen';
-        checks.forEach((c) => c.classList.remove('is-done'));
-        docs.forEach((d) => d.classList.remove('is-done'));
-        avatars.forEach((a) => a.classList.remove('is-in'));
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
+        show(0);
+        [].concat(checks, docs).forEach((el) => el.classList.remove('is-done'));
+        [].concat(members, schemes).forEach((el) => el.classList.remove('is-in'));
+        prop.classList.remove('is-in');
         cta.classList.remove('is-in');
-        document.getElementById('simNext').classList.remove('is-in');
-        tabs.forEach((t, i) => t.classList.toggle('is-on', i === 0));
         ring.style.transition = 'none';
         ring.style.strokeDashoffset = CIRC;
         pct.textContent = '0';
         pool.textContent = money(0);
-        void ring.getBoundingClientRect();          // flush, so the sweep animates
+        target.textContent = money(0);
+        void ring.getBoundingClientRect();      // flush, so the sweep animates
         ring.style.transition = '';
       }
 
-      /* Counts a number up on an ease-out curve. Rounded on every frame — a
-         raw lerp shows float dust like $115,999.9997. */
-      function countTo(el, to, ms, fmt) {
+      /* Eased count-up. Rounded every frame — a raw lerp shows float dust
+         like $115,999.9997 on the way through. */
+      function countTo(el, to, ms) {
         const t0 = performance.now();
         (function step(now) {
           const k = Math.min(1, (now - t0) / ms);
-          const e = 1 - Math.pow(1 - k, 3);
-          el.textContent = fmt(to * e);
-          if (k < 1) counter = requestAnimationFrame(step);
+          el.textContent = money(to * (1 - Math.pow(1 - k, 3)));
+          if (k < 1) raf = requestAnimationFrame(step);
         })(t0);
       }
 
       function play() {
         reset();
-        at(600,  () => checks[0].classList.add('is-done'));
-        avatars.forEach((a, i) => at(1400 + i * 320, () => a.classList.add('is-in')));
-        at(2700, () => checks[1].classList.add('is-done'));
-        at(3100, () => countTo(pool, POOL, 1600, money));
-        at(4900, () => checks[2].classList.add('is-done'));
-        at(5200, () => {
-          ring.style.strokeDashoffset = CIRC * 0.25;   // 75%
-          countTo(pct, 75, 1500, (v) => String(Math.round(v)));
-        });
-        at(6900, () => document.getElementById('simNext').classList.add('is-in'));
-        at(7600, () => {
-          screens[0].className = 'sim-screen is-back';
-          screens[1].className = 'sim-screen is-front';
-          tabs.forEach((t, i) => t.classList.toggle('is-on', i === 3));
-        });
-        docs.forEach((d, i) => at(8500 + i * 340, () => d.classList.add('is-done')));
-        at(10900, () => cta.classList.add('is-in'));
-        at(14000, play);
+
+        /* 1 — the house comes together */
+        at(500,  () => checks[0].classList.add('is-done'));
+        at(1100, () => { countTo(target, 840000, 1200); });
+        at(2000, () => checks[1].classList.add('is-done'));
+        at(2400, () => { const el = pool; const t0 = performance.now();
+          (function step(now) { const k = Math.min(1, (now - t0) / 1400);
+            el.textContent = money(116000 * (1 - Math.pow(1 - k, 3)));
+            if (k < 1) requestAnimationFrame(step); })(t0); });
+        at(3900, () => checks[2].classList.add('is-done'));
+        at(4300, () => checks[3].classList.add('is-done'));
+        at(4600, () => { ring.style.strokeDashoffset = CIRC * 0.25;
+          const t0 = performance.now();
+          (function step(now) { const k = Math.min(1, (now - t0) / 1400);
+            pct.textContent = String(Math.round(75 * (1 - Math.pow(1 - k, 3))));
+            if (k < 1) requestAnimationFrame(step); })(t0); });
+
+        /* 2 — members and the split */
+        at(7000, () => show(1));
+        members.forEach((m, i) => at(7500 + i * 260, () => m.classList.add('is-in')));
+
+        /* 3 — the shortlist */
+        at(11200, () => show(2));
+        at(11700, () => prop.classList.add('is-in'));
+
+        /* 4 — the schemes, including the applicant-cap flag */
+        at(14200, () => show(3));
+        schemes.forEach((x, i) => at(14700 + i * 240, () => x.classList.add('is-in')));
+
+        /* 5 — the pack */
+        at(18000, () => show(4));
+        docs.forEach((d, i) => at(18500 + i * 300, () => d.classList.add('is-done')));
+        at(20700, () => cta.classList.add('is-in'));
+
+        at(24000, play);
       }
 
       let running = false;
@@ -657,10 +644,10 @@
       const stop  = () => {
         running = false;
         timers.forEach(clearTimeout); timers = [];
-        if (counter) { cancelAnimationFrame(counter); counter = null; }
+        if (raf) { cancelAnimationFrame(raf); raf = null; }
       };
 
-      /* Only run while it is actually on screen and the tab is focused. */
+      /* Only run while it is on screen and the tab is focused. */
       if ('IntersectionObserver' in window) {
         new IntersectionObserver((es) => {
           es.forEach((e) => (e.isIntersecting ? start() : stop()));
@@ -673,28 +660,22 @@
 
     /* ---- pointer tilt ---- */
     if (!calm.matches && window.matchMedia('(pointer: fine)').matches) {
-      let raf = null;
+      let tr = null;
       const clamp = (v) => (v < -1 ? -1 : v > 1 ? 1 : v);
 
       media.addEventListener('pointermove', (e) => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => {
-          raf = null;
+        if (tr) return;
+        tr = requestAnimationFrame(() => {
+          tr = null;
           const r = media.getBoundingClientRect();
-
-          /* Pivot on the centre of the phone, not the centre of the photo
-             block — the device hangs off the bottom-left corner, so those are
-             nowhere near each other.
-
-             offsetLeft/offsetTop are layout values and therefore immune to the
-             transform being applied. Reading device.getBoundingClientRect()
-             here would feed the rotation back into its own input and jitter. */
+          /* Pivot on the phone, not the photo block — the device hangs off the
+             bottom-left corner. offsetLeft/offsetTop are layout values and so
+             immune to the transform; reading getBoundingClientRect() here would
+             feed the rotation back into its own input and jitter. */
           const cx = r.left + device.offsetLeft + device.offsetWidth  / 2;
           const cy = r.top  + device.offsetTop  + device.offsetHeight / 2;
-
           const x = clamp((e.clientX - cx) / (r.width  / 2));
           const y = clamp((e.clientY - cy) / (r.height / 2));
-
           device.style.transition = 'transform .12s linear';
           device.style.transform =
             'rotateY(' + (x * 13).toFixed(2) + 'deg) rotateX(' + (-y * 9).toFixed(2) + 'deg) translateZ(22px)';
