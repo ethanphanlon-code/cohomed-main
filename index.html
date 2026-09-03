@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=0c9e110d">
+<link rel="stylesheet" href="/styles.css?v=1d6281d3">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -58,7 +58,7 @@
       <span class="pill rise"><i class="dot"></i>Queensland co-ownership</span>
 
       <h1 class="rise rise-1" style="margin-top:22px">
-        Buy a home together, <span style="display:block;color:var(--accent)">prepared properly.</span>
+        Stop paying someone else’s mortgage. <span style="display:block;color:var(--accent)">Start paying your own.</span>
       </h1>
 
       <p class="lead rise rise-2" style="max-width:30em;margin-top:24px">
@@ -82,17 +82,35 @@
       </p>
     </div>
 
-    <!-- Hero: photograph as the plate, app hanging off the bottom-left corner -->
-    <div class="hero-media rise rise-2">
-      <div class="photo tall" style="border-radius:26px 26px 26px 6px">
+    <!-- Hero: photograph as the plate, app hanging off the bottom-left corner.
+         The device tilts toward the pointer on desktop and cycles through
+         three screens on every device. Both degrade to a static first screen
+         with no JS, and under prefers-reduced-motion. -->
+    <div class="hero-media rise rise-2" id="heroMedia">
+      <div class="photo tall" id="heroPhoto" style="border-radius:26px 26px 26px 6px">
         <img src="https://images.unsplash.com/photo-1714836982299-7a3b6930e2f5?auto=format&amp;fit=crop&amp;w=1400&amp;q=70"
              alt="Timber Queensland home with a veranda and front steps leading up to the door"
              fetchpriority="high" decoding="async">
       </div>
-      <img class="shot"
-           src="/assets/screens/home.png"
-           alt="The CoHomed home screen showing The Kelvin Grove House at 75% readiness"
-           width="1080" height="2400" fetchpriority="high" decoding="async">
+
+      <div class="device" id="device">
+        <img class="shot is-on" src="/assets/screens/home.png"
+             alt="The CoHomed home screen showing The Kelvin Grove House at 75% readiness"
+             width="1080" height="2400" fetchpriority="high" decoding="async">
+        <img class="shot" src="/assets/screens/house.png" alt=""
+             width="1080" height="2400" fetchpriority="low" decoding="async">
+        <img class="shot" src="/assets/screens/documents.png" alt=""
+             width="1080" height="2400" fetchpriority="low" decoding="async">
+      </div>
+
+      <div class="device-ui" id="deviceUi" hidden>
+        <p class="device-cap" id="deviceCap" aria-live="polite">Where the house is up to</p>
+        <div class="device-dots" id="deviceDots">
+          <button type="button" aria-label="Home screen" aria-pressed="true"></button>
+          <button type="button" aria-label="House and split" aria-pressed="false"></button>
+          <button type="button" aria-label="Documents" aria-pressed="false"></button>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -476,6 +494,91 @@
 
 <script>
   document.getElementById('yr').textContent = new Date().getFullYear();
+
+  /* ---- Hero device: pointer tilt + screen cycle -------------------------
+     Two independent behaviours, both optional. The tilt only runs on a fine
+     pointer, because on touch there is nothing to follow. The cycle runs
+     everywhere. Either can fail without taking the other down, and the
+     markup already renders correctly with neither. */
+  (function () {
+    const media  = document.getElementById('heroMedia');
+    const device = document.getElementById('device');
+    const ui     = document.getElementById('deviceUi');
+    const cap    = document.getElementById('deviceCap');
+    const dots   = document.getElementById('deviceDots');
+    if (!media || !device || !ui) return;
+
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (calm.matches) return;
+
+    const shots = Array.from(device.querySelectorAll('.shot'));
+    const btns  = Array.from(dots.querySelectorAll('button'));
+    const CAPS  = [
+      'Track where the house is up to',
+      'Shares update as each person adds theirs',
+      'Six documents, ready to sign'
+    ];
+    // Real alt text follows the active screen so the picture a screen reader
+    // is told about is the one actually showing.
+    const ALTS = [
+      'The CoHomed home screen showing The Kelvin Grove House at 75% readiness',
+      'The House tab showing four members and the ownership split',
+      'The Documents tab showing six documents ready to sign'
+    ];
+
+    let i = 0, timer = null, held = false;
+
+    function show(n) {
+      i = (n + shots.length) % shots.length;
+      shots.forEach((s, x) => {
+        s.classList.toggle('is-on', x === i);
+        s.alt = x === i ? ALTS[x] : '';
+      });
+      btns.forEach((b, x) => b.setAttribute('aria-pressed', String(x === i)));
+      cap.textContent = CAPS[i];
+    }
+
+    function play()  { stop(); if (!held) timer = setInterval(() => show(i + 1), 4200); }
+    function stop()  { if (timer) { clearInterval(timer); timer = null; } }
+
+    btns.forEach((b, x) => b.addEventListener('click', () => {
+      held = true; stop(); show(x);
+      // Resume after a pause so one click doesn't freeze it forever.
+      setTimeout(() => { held = false; play(); }, 9000);
+    }));
+
+    ui.hidden = false;
+    show(0);
+    play();
+
+    // Pause while the hero is off screen — no point animating what nobody sees.
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver((es) => {
+        es.forEach((e) => (e.isIntersecting ? play() : stop()));
+      }, { threshold: 0.15 }).observe(media);
+    }
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : play()));
+
+    if (window.matchMedia('(pointer: fine)').matches) {
+      let raf = null;
+      media.addEventListener('pointermove', (e) => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = null;
+          const r = media.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width  - 0.5;
+          const y = (e.clientY - r.top)  / r.height - 0.5;
+          device.style.transition = 'transform .12s linear';
+          device.style.transform =
+            'rotateY(' + (x * 13).toFixed(2) + 'deg) rotateX(' + (-y * 9).toFixed(2) + 'deg) translateZ(22px)';
+        });
+      });
+      media.addEventListener('pointerleave', () => {
+        device.style.transition = '';
+        device.style.transform = '';
+      });
+    }
+  })();
 
   // Scroll reveals. Everything is visible by default if this never runs,
   // and the reduced-motion guard in CSS neutralises the transition.
