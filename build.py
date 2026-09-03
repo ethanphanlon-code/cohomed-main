@@ -1168,17 +1168,41 @@ PAGES['terms.html'] = dict(
 # ══════════════════════════════════════════════════════════ write ══
 
 def stamp_index() -> None:
-    """Point index.html at the current stylesheet hash.
+    """Sync index.html with everything the generated pages get for free.
 
-    index.html is hand-maintained rather than generated, so it would otherwise
-    be the one page that could drift out of step with the others.
+    index.html is hand-maintained rather than generated, so it drifts. Adding
+    the calculator to NAV_ITEMS updated the six generated pages and silently
+    left the landing page behind — the link appeared only once you navigated
+    away from home. The nav and the footer link list are now stamped from the
+    same source as everywhere else, so that class of bug cannot recur.
     """
     path = HERE / 'index.html'
     src = path.read_text(encoding='utf-8')
+
     out = re.sub(
         r'href="/styles\.css(?:\?v=[^"]*)?"',
         f'href="/styles.css?v={CSS_VER}"',
         src,
+    )
+
+    # The landing page is "/", so no nav item is the current page.
+    out = re.sub(
+        r'<header class="nav">.*?</header>',
+        lambda _m: nav(''),
+        out,
+        flags=re.S,
+    )
+
+    # Footer "Product" column, kept in step with the nav.
+    product = ''.join(
+        f'<a href="{h}">{"Queensland schemes" if l == "Schemes" else l}</a>\n          '
+        for h, l in NAV_ITEMS if l != 'About'
+    ).rstrip()
+    out = re.sub(
+        r'(<h4>Product</h4>\s*<div class="footer-links">)(.*?)(</div>)',
+        lambda m: m.group(1) + '\n          ' + product + '\n        ' + m.group(3),
+        out,
+        flags=re.S,
     )
     if out != src:
         path.write_text(out, encoding='utf-8')
