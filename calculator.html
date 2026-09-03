@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What could you buy together? — CoHomed</title>
+<meta name="description" content="Put in what each of you earns and has saved, and see the arithmetic: indicative borrowing, buying power, deposit each, and which Queensland schemes are open to a group your size.">
+<meta name="theme-color" content="#4E6B54">
+<link rel="canonical" href="https://www.cohomed.com/calculator.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What could you buy together? — CoHomed">
+<meta property="og:description" content="Put in what each of you earns and has saved, and see the arithmetic: indicative borrowing, buying power, deposit each, and which Queensland schemes are open to a group your size.">
+<meta property="og:url" content="https://www.cohomed.com/calculator.html">
+<meta property="og:site_name" content="CoHomed">
+<link rel="icon" href="/assets/cohomed-favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/cohomed-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/styles.css?v=596482cf">
+<script>document.documentElement.classList.add('js')</script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="nav">
+  <nav class="nav-inner" aria-label="Primary">
+    <a class="logo" href="/" aria-label="CoHomed home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="currentColor" stroke-width="5"/><path d="M18 34 32 21l14 13v14H18V34Z" fill="currentColor"/></svg><span>CoHomed</span></a>
+    <div class="nav-links"><a href="/how-it-works.html">How it works</a><a href="/calculator.html" aria-current="page">Calculator</a><a href="/#schemes">Schemes</a><a href="/#pricing">Pricing</a><a href="/faq.html">FAQ</a><a href="/about.html">About</a><a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
+  </nav>
+</header>
+<main id="main">
+<section style="padding-bottom:clamp(24px,2.8vw,36px)">
+  <div class="wrap" style="max-width:900px">
+    <span class="eyebrow">Calculator</span>
+    <h1 style="font-size:clamp(36px,5.2vw,60px);margin-top:14px">What could you buy together?</h1>
+    <p class="lead" style="margin-top:20px;max-width:38em">Put in what each of you earns and has saved. This is arithmetic on the numbers you enter — not an assessment, not advice, and nothing leaves your browser.</p>
+  </div>
+</section>
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:1000px">
+    <div class="calc">
+
+      <div class="calc-in">
+        <div class="calc-people">
+          <span class="eyebrow">How many of you</span>
+          <div class="seg" id="calcCount" role="group" aria-label="Number of buyers">
+            <button type="button" data-n="2">2</button>
+            <button type="button" data-n="3">3</button>
+            <button type="button" data-n="4" class="is-on">4</button>
+          </div>
+        </div>
+
+        <div id="calcRows" class="calc-rows"></div>
+
+        <label class="calc-field calc-field--wide">
+          <span>Assumed interest rate <em id="calcRateOut">6.0%</em></span>
+          <input type="range" id="calcRate" min="4.5" max="9" step="0.1" value="6">
+        </label>
+        <p class="fine">Lenders assess at roughly 3% above the offer rate. This
+        uses that buffer, a 30-year term, and standard living-expense benchmarks.</p>
+      </div>
+
+      <div class="calc-out" id="calcOut" aria-live="polite">
+        <div class="calc-hero">
+          <span class="eyebrow">Indicative buying power</span>
+          <b id="calcPower">$0</b>
+          <em id="calcBreak">&nbsp;</em>
+        </div>
+        <div class="calc-stats">
+          <div><b id="calcBorrow">$0</b><span>Could borrow</span></div>
+          <div><b id="calcDeposit">$0</b><span>Deposit pooled</span></div>
+          <div><b id="calcEach">$0</b><span>Deposit each</span></div>
+          <div><b id="calcRepay">$0</b><span>Monthly repayment</span></div>
+        </div>
+        <div class="calc-schemes">
+          <span class="eyebrow">Schemes open to a group this size</span>
+          <ul id="calcSchemes"></ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note" style="margin-top:26px">
+      <b>This is a sum, not an assessment.</b> Real borrowing capacity varies a
+      great deal between lenders — how they treat HECS, living expenses, casual
+      income and whether they assess you jointly or individually. A broker or
+      lender will give you a different number, in either direction. CoHomed is
+      not a credit provider, does not arrange finance, and does not determine
+      anyone&rsquo;s eligibility for any scheme.
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var COUNT = 4;
+  var DEFAULTS = [[85000, 42000], [72000, 31000], [64000, 25000], [58000, 18000]];
+  var rows = document.getElementById('calcRows');
+  if (!rows) return;
+
+  /* Australian resident rates, 2026-27, plus the 2% Medicare levy. */
+  function taxOf(g) {
+    var t;
+    if (g <= 18200) t = 0;
+    else if (g <= 45000) t = (g - 18200) * 0.15;
+    else if (g <= 135000) t = 4020 + (g - 45000) * 0.30;
+    else if (g <= 190000) t = 31020 + (g - 135000) * 0.37;
+    else t = 51370 + (g - 190000) * 0.45;
+    return t + g * 0.02;
+  }
+  var money = function (n) { return '$' + Math.round(n).toLocaleString('en-AU'); };
+  var big = function (n) {
+    return n >= 1e6 ? '$' + (n / 1e6).toFixed(2) + 'm' : '$' + Math.round(n / 1000) + 'k';
+  };
+
+  function build() {
+    rows.innerHTML = '';
+    for (var i = 0; i < COUNT; i++) {
+      var d = DEFAULTS[i];
+      var el = document.createElement('div');
+      el.className = 'calc-row';
+      el.innerHTML =
+        '<span class="calc-who">Person ' + (i + 1) + '</span>' +
+        '<label class="calc-field"><span>Gross income <em data-out="inc' + i + '"></em></span>' +
+        '<input type="range" data-k="inc" data-i="' + i + '" min="0" max="200000" step="1000" value="' + d[0] + '"></label>' +
+        '<label class="calc-field"><span>Savings <em data-out="dep' + i + '"></em></span>' +
+        '<input type="range" data-k="dep" data-i="' + i + '" min="0" max="300000" step="1000" value="' + d[1] + '"></label>';
+      rows.appendChild(el);
+    }
+    rows.addEventListener('input', calc);
+    calc();
+  }
+
+  function calc() {
+    var incomes = [], deps = [];
+    rows.querySelectorAll('input').forEach(function (inp) {
+      var v = +inp.value, i = +inp.dataset.i;
+      (inp.dataset.k === 'inc' ? incomes : deps)[i] = v;
+      var out = rows.querySelector('[data-out="' + inp.dataset.k + i + '"]');
+      if (out) out.textContent = money(v);
+    });
+
+    var rate = +document.getElementById('calcRate').value;
+    document.getElementById('calcRateOut').textContent = rate.toFixed(1) + '%';
+
+    var netMonthly = incomes.reduce(function (a, g) { return a + (g - taxOf(g)); }, 0) / 12;
+    /* Household expense benchmark. Scaling this too gently was producing
+       borrowing capacity above six times gross for a group of four, which no
+       lender would write. */
+    var living = 1200 + 1300 * COUNT;
+    var surplus = Math.max(0, netMonthly - living);
+
+    var assess = (rate + 3) / 100 / 12;         /* lender buffer */
+    var n = 360;
+    var capacity = surplus * (1 - Math.pow(1 + assess, -n)) / assess;
+
+    var pooled = deps.reduce(function (a, b) { return a + b; }, 0);
+    var usable = Math.max(0, pooled - 7000);     /* conveyancing, B&P, registration */
+
+    /* Two ceilings, and the lower one wins. Income alone was giving answers at
+       94% LVR — a number no lender would approve and misleading to show. */
+    var MAX_LVR = 0.90;
+    var byIncome = usable + capacity;
+    var byDeposit = usable / (1 - MAX_LVR);
+    var power = Math.min(byIncome, byDeposit);
+    var borrow = Math.max(0, power - usable);
+    var limit = byDeposit < byIncome ? 'deposit' : 'income';
+
+    var r = rate / 100 / 12;
+    var repay = borrow > 0 ? borrow * r / (1 - Math.pow(1 + r, -n)) : 0;
+    var lvr = power > 0 ? borrow / power * 100 : 0;
+
+    document.getElementById('calcPower').textContent = big(power);
+    document.getElementById('calcBreak').textContent =
+      money(pooled) + ' saved plus ' + money(borrow) + ' borrowed, at ' +
+      lvr.toFixed(0) + '% LVR — ' + (limit === 'deposit'
+        ? 'limited by the deposit, not by income'
+        : 'limited by income, not by the deposit');
+    document.getElementById('calcBorrow').textContent = big(borrow);
+    document.getElementById('calcDeposit').textContent = big(pooled);
+    document.getElementById('calcEach').textContent = big(pooled / COUNT);
+    document.getElementById('calcRepay').textContent = money(repay);
+
+    var capped = COUNT > 2;
+    var schemes = [
+      ['First Home Owner Grant', true, 'New homes under $750,000'],
+      ['First home (new home) duty concession', true, 'Assessed on each person’s share'],
+      ['Boost to Buy', !capped, capped ? 'Thresholds stop at two adults' : 'Property cap $1,000,000'],
+      ['First Home Guarantee', !capped, capped ? 'Maximum two applicants' : 'Cannot be combined with Boost to Buy']
+    ];
+    document.getElementById('calcSchemes').innerHTML = schemes.map(function (s) {
+      return '<li class="' + (s[1] ? 'is-y' : 'is-n') + '"><b>' + s[0] + '</b><em>' + s[2] + '</em></li>';
+    }).join('');
+  }
+
+  document.getElementById('calcCount').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    COUNT = +b.dataset.n;
+    this.querySelectorAll('button').forEach(function (x) {
+      x.classList.toggle('is-on', x === b);
+    });
+    build();
+  });
+
+  build();
+})();
+</script><section class="field" style="text-align:center">
+  <div class="wrap">
+    <div class="reveal" style="max-width:40em;margin-inline:auto">
+      <span class="eyebrow">Get started</span>
+      <h2 style="margin:14px 0 16px">Numbers looking possible?</h2>
+      <p class="lead" style="max-width:34em;margin-inline:auto">Set up a house, invite the others, and work through the schemes properly before you spend anything.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:30px">
+        <a class="btn btn-on-accent" href="/#get-started">Get the app</a>
+        <a class="btn btn-ghost-accent" href="/how-it-works.html">See how it works</a>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-cols">
+      <div style="max-width:26em">
+        <a class="logo" href="/" style="font-size:21px"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="#FBF6EE" stroke-width="5"/><path d="M18 34 32 21l14 13v14H18V34Z" fill="#FBF6EE"/></svg><span>CoHomed</span></a>
+        <p class="small" style="margin-top:14px">
+          Helping Queenslanders buy homes together. Fairly, transparently, and
+          without pretending the paperwork isn’t the hard part.
+        </p>
+      </div>
+      <div>
+        <h4>Product</h4>
+        <div class="footer-links">
+          <a href="/how-it-works.html">How it works</a>
+          <a href="/#schemes">Queensland schemes</a>
+          <a href="/#pricing">Pricing</a>
+          <a href="/faq.html">FAQ</a>
+        </div>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <div class="footer-links">
+          <a href="/about.html">About</a>
+          <a href="/contact.html">Contact</a>
+        </div>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <div class="footer-links">
+          <a href="/privacy.html">Privacy policy</a>
+          <a href="/terms.html">Terms of service</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-base">
+      <span>© <span id="yr">2026</span> CoHomed Pty Ltd. Queensland, Australia.</span>
+      <span>CoHomed prepares documents and provides information. It does not provide legal, financial or credit advice.</span>
+    </div>
+  </div>
+</footer>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+// Reveal on scroll.
+  // Deliberately a scroll check rather than an IntersectionObserver: an
+  // observer only fires while an element is intersecting, so anything that
+  // flies through the viewport between two ticks — a trackpad flick, a wheel
+  // spin, an anchor jump — never registers and stays invisible for good. This
+  // reveals anything whose top has passed the fold, so it cannot be outrun.
+  (function () {
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
+    if (!els.length) return;
+    els.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
+    });
+    var queued = false;
+    function pass() {
+      queued = false;
+      for (var i = els.length - 1; i >= 0; i--) {
+        if (els[i].getBoundingClientRect().top < window.innerHeight - 60) {
+          els[i].classList.add('in');
+          els.splice(i, 1);
+        }
+      }
+      if (!els.length) {
+        window.removeEventListener('scroll', tick);
+        window.removeEventListener('resize', tick);
+      }
+    }
+    function tick() { if (!queued) { queued = true; requestAnimationFrame(pass); } }
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', tick);
+    pass();
+  })();
+</script>
+</body>
+</html>

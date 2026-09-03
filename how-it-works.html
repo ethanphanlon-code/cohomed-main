@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=d8e7c0e6">
+<link rel="stylesheet" href="/styles.css?v=596482cf">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -25,7 +25,7 @@
 <header class="nav">
   <nav class="nav-inner" aria-label="Primary">
     <a class="logo" href="/" aria-label="CoHomed home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="currentColor" stroke-width="5"/><path d="M18 34 32 21l14 13v14H18V34Z" fill="currentColor"/></svg><span>CoHomed</span></a>
-    <div class="nav-links"><a href="/how-it-works.html" aria-current="page">How it works</a><a href="/#schemes">Schemes</a><a href="/#pricing">Pricing</a><a href="/faq.html">FAQ</a><a href="/about.html">About</a><a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
+    <div class="nav-links"><a href="/how-it-works.html" aria-current="page">How it works</a><a href="/calculator.html">Calculator</a><a href="/#schemes">Schemes</a><a href="/#pricing">Pricing</a><a href="/faq.html">FAQ</a><a href="/about.html">About</a><a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
   </nav>
 </header>
 <main id="main">
@@ -58,7 +58,7 @@
 <section style="padding-top:0">
   <div class="wrap">
 
-    <div class="alt-row reveal" style="margin-bottom:clamp(56px,7vw,96px)">
+    <div class="alt-row reveal" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media"><div class="photo square "><img src="https://images.unsplash.com/photo-1632110325927-9db96b3f2e2c?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="A timber home half hidden by dense subtropical planting" loading="lazy" decoding="async"></div></div>
   <div>
     <div class="step-big"><span class="n">01</span><span class="l">Set up</span></div>
@@ -68,7 +68,7 @@
   </div>
 </div>
 
-    <div class="alt-row reveal flip" style="margin-bottom:clamp(56px,7vw,96px)">
+    <div class="alt-row reveal flip" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media"><div class="photo square "><img src="https://images.unsplash.com/photo-1517502884422-41eaead166d4?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="A small group sitting around a table going through documents together" loading="lazy" decoding="async"></div></div>
   <div>
     <div class="step-big"><span class="n">02</span><span class="l">Invite</span></div>
@@ -78,7 +78,7 @@
   </div>
 </div>
 
-    <div class="alt-row reveal" style="margin-bottom:clamp(56px,7vw,96px)">
+    <div class="alt-row reveal" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media"><div class="photo square "><img src="https://images.unsplash.com/photo-1562564055-71e051d33c19?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="Two people going through and signing paperwork together at a table" loading="lazy" decoding="async"></div></div>
   <div>
     <div class="step-big"><span class="n">03</span><span class="l">The numbers</span></div>
@@ -88,7 +88,7 @@
   </div>
 </div>
 
-    <div class="alt-row reveal flip" style="margin-bottom:clamp(56px,7vw,96px)">
+    <div class="alt-row reveal flip" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media"><div class="photo square "><img src="https://images.unsplash.com/photo-1635859890085-ec8cb5466806?auto=format&amp;fit=crop&amp;w=900&amp;q=70" alt="Printed documents spread across a table, being worked through" loading="lazy" decoding="async"></div></div>
   <div>
     <div class="step-big"><span class="n">04</span><span class="l">The schemes</span></div>
@@ -98,7 +98,7 @@
   </div>
 </div>
 
-    <div class="alt-row reveal" style="margin-bottom:clamp(56px,7vw,96px)">
+    <div class="alt-row reveal" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media"><div class="pack">
   <div class="pack-head"><span class="eyebrow">The pack</span><em>Six documents</em></div>
   <ul class="pack-list"><li style="--i:0"><span class="pack-n">1</span><span class="pack-t"><b>Co-Ownership Agreement</b><em>Tenants in common · 14 pages</em></span></li><li style="--i:1"><span class="pack-n">2</span><span class="pack-t"><b>Household Expense Agreement</b><em>Shared costs and arrears · 6 pages</em></span></li><li style="--i:2"><span class="pack-n">3</span><span class="pack-t"><b>Mortgage Contribution Deed</b><em>Repayment shares · 5 pages</em></span></li><li style="--i:3"><span class="pack-n">4</span><span class="pack-t"><b>Statement of Position</b><em>One per member · 4 documents</em></span></li><li style="--i:4"><span class="pack-n">5</span><span class="pack-t"><b>Lender Presentation Pack</b><em>Factual compilation · 11 pages</em></span></li><li style="--i:5"><span class="pack-n">6</span><span class="pack-t"><b>Grant Application Packs</b><em>Pre-filled per scheme · 3 documents</em></span></li></ul>
@@ -276,25 +276,37 @@
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-// Reveal on scroll. Anything already in view on load is revealed immediately,
-// so short pages never sit hidden waiting for a scroll that will not come.
-(function () {
-  var els = document.querySelectorAll('.reveal');
-  if (!els.length) return;
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(function (el) { el.classList.add('in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+// Reveal on scroll.
+  // Deliberately a scroll check rather than an IntersectionObserver: an
+  // observer only fires while an element is intersecting, so anything that
+  // flies through the viewport between two ticks — a trackpad flick, a wheel
+  // spin, an anchor jump — never registers and stays invisible for good. This
+  // reveals anything whose top has passed the fold, so it cannot be outrun.
+  (function () {
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
+    if (!els.length) return;
+    els.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
     });
-  }, { rootMargin: '0px 0px -60px 0px' });
-  els.forEach(function (el, i) {
-    el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
-    io.observe(el);
-  });
-})();
+    var queued = false;
+    function pass() {
+      queued = false;
+      for (var i = els.length - 1; i >= 0; i--) {
+        if (els[i].getBoundingClientRect().top < window.innerHeight - 60) {
+          els[i].classList.add('in');
+          els.splice(i, 1);
+        }
+      }
+      if (!els.length) {
+        window.removeEventListener('scroll', tick);
+        window.removeEventListener('resize', tick);
+      }
+    }
+    function tick() { if (!queued) { queued = true; requestAnimationFrame(pass); } }
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', tick);
+    pass();
+  })();
 </script>
 </body>
 </html>

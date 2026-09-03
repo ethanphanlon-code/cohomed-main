@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=d8e7c0e6">
+<link rel="stylesheet" href="/styles.css?v=596482cf">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -25,11 +25,11 @@
 <header class="nav">
   <nav class="nav-inner" aria-label="Primary">
     <a class="logo" href="/" aria-label="CoHomed home"><svg viewBox="0 0 64 64" aria-hidden="true"><rect x="5" y="5" width="54" height="54" rx="12" fill="none" stroke="currentColor" stroke-width="5"/><path d="M18 34 32 21l14 13v14H18V34Z" fill="currentColor"/></svg><span>CoHomed</span></a>
-    <div class="nav-links"><a href="/how-it-works.html">How it works</a><a href="/#schemes">Schemes</a><a href="/#pricing">Pricing</a><a href="/faq.html" aria-current="page">FAQ</a><a href="/about.html">About</a><a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
+    <div class="nav-links"><a href="/how-it-works.html">How it works</a><a href="/calculator.html">Calculator</a><a href="/#schemes">Schemes</a><a href="/#pricing">Pricing</a><a href="/faq.html" aria-current="page">FAQ</a><a href="/about.html">About</a><a class="btn btn-primary btn-sm nav-cta" href="/#get-started">Get the app</a></div>
   </nav>
 </header>
 <main id="main">
-<section style="padding-bottom:clamp(32px,4vw,48px)">
+<section style="padding-bottom:clamp(24px,2.8vw,36px)">
   <div class="wrap" style="max-width:900px">
     <span class="eyebrow">FAQ</span>
     <h1 style="font-size:clamp(36px,5.2vw,60px);margin-top:14px">Questions people actually ask.</h1>
@@ -102,25 +102,37 @@
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-// Reveal on scroll. Anything already in view on load is revealed immediately,
-// so short pages never sit hidden waiting for a scroll that will not come.
-(function () {
-  var els = document.querySelectorAll('.reveal');
-  if (!els.length) return;
-  if (!('IntersectionObserver' in window)) {
-    els.forEach(function (el) { el.classList.add('in'); });
-    return;
-  }
-  var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) {
-      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+// Reveal on scroll.
+  // Deliberately a scroll check rather than an IntersectionObserver: an
+  // observer only fires while an element is intersecting, so anything that
+  // flies through the viewport between two ticks — a trackpad flick, a wheel
+  // spin, an anchor jump — never registers and stays invisible for good. This
+  // reveals anything whose top has passed the fold, so it cannot be outrun.
+  (function () {
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
+    if (!els.length) return;
+    els.forEach(function (el, i) {
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
     });
-  }, { rootMargin: '0px 0px -60px 0px' });
-  els.forEach(function (el, i) {
-    el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
-    io.observe(el);
-  });
-})();
+    var queued = false;
+    function pass() {
+      queued = false;
+      for (var i = els.length - 1; i >= 0; i--) {
+        if (els[i].getBoundingClientRect().top < window.innerHeight - 60) {
+          els[i].classList.add('in');
+          els.splice(i, 1);
+        }
+      }
+      if (!els.length) {
+        window.removeEventListener('scroll', tick);
+        window.removeEventListener('resize', tick);
+      }
+    }
+    function tick() { if (!queued) { queued = true; requestAnimationFrame(pass); } }
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', tick);
+    pass();
+  })();
 </script>
 </body>
 </html>

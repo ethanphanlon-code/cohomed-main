@@ -42,6 +42,7 @@ MARK_LIGHT = MARK.replace('currentColor', '#FBF6EE')
 
 NAV_ITEMS = [
     ('/how-it-works.html', 'How it works'),
+    ('/calculator.html', 'Calculator'),
     ('/#schemes', 'Schemes'),
     ('/#pricing', 'Pricing'),
     ('/faq.html', 'FAQ'),
@@ -106,25 +107,37 @@ FOOTER = f"""<footer class="footer">
 <script>
 document.getElementById('yr').textContent = new Date().getFullYear();
 
-// Reveal on scroll. Anything already in view on load is revealed immediately,
-// so short pages never sit hidden waiting for a scroll that will not come.
-(function () {{
-  var els = document.querySelectorAll('.reveal');
-  if (!els.length) return;
-  if (!('IntersectionObserver' in window)) {{
-    els.forEach(function (el) {{ el.classList.add('in'); }});
-    return;
-  }}
-  var io = new IntersectionObserver(function (entries) {{
-    entries.forEach(function (e) {{
-      if (e.isIntersecting) {{ e.target.classList.add('in'); io.unobserve(e.target); }}
+// Reveal on scroll.
+  // Deliberately a scroll check rather than an IntersectionObserver: an
+  // observer only fires while an element is intersecting, so anything that
+  // flies through the viewport between two ticks — a trackpad flick, a wheel
+  // spin, an anchor jump — never registers and stays invisible for good. This
+  // reveals anything whose top has passed the fold, so it cannot be outrun.
+  (function () {{
+    var els = [].slice.call(document.querySelectorAll('.reveal'));
+    if (!els.length) return;
+    els.forEach(function (el, i) {{
+      el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
     }});
-  }}, {{ rootMargin: '0px 0px -60px 0px' }});
-  els.forEach(function (el, i) {{
-    el.style.transitionDelay = (Math.min(i % 4, 3) * 70) + 'ms';
-    io.observe(el);
-  }});
-}})();
+    var queued = false;
+    function pass() {{
+      queued = false;
+      for (var i = els.length - 1; i >= 0; i--) {{
+        if (els[i].getBoundingClientRect().top < window.innerHeight - 60) {{
+          els[i].classList.add('in');
+          els.splice(i, 1);
+        }}
+      }}
+      if (!els.length) {{
+        window.removeEventListener('scroll', tick);
+        window.removeEventListener('resize', tick);
+      }}
+    }}
+    function tick() {{ if (!queued) {{ queued = true; requestAnimationFrame(pass); }} }}
+    window.addEventListener('scroll', tick, {{ passive: true }});
+    window.addEventListener('resize', tick);
+    pass();
+  }})();
 </script>"""
 
 
@@ -164,7 +177,7 @@ SHELL = """<!DOCTYPE html>
 
 def page_head(eyebrow: str, title: str, lead: str = '') -> str:
     lead_html = f'<p class="lead" style="margin-top:20px;max-width:38em">{lead}</p>' if lead else ''
-    return f"""<section style="padding-bottom:clamp(32px,4vw,48px)">
+    return f"""<section style="padding-bottom:clamp(24px,2.8vw,36px)">
   <div class="wrap" style="max-width:900px">
     <span class="eyebrow">{eyebrow}</span>
     <h1 style="font-size:clamp(36px,5.2vw,60px);margin-top:14px">{title}</h1>
@@ -181,7 +194,7 @@ def prose(*blocks: str) -> str:
 </section>"""
 
 
-def h2(t): return f'<h2 style="font-size:clamp(24px,3vw,32px);margin:40px 0 14px">{t}</h2>'
+def h2(t): return f'<h2 style="font-size:clamp(24px,3vw,32px);margin:32px 0 12px">{t}</h2>'
 def h3(t): return f'<h3 style="margin:28px 0 10px">{t}</h3>'
 def p(t):  return f'<p style="margin-bottom:14px">{t}</p>'
 def note(t): return f'<div class="note" style="margin:24px 0">{t}</div>'
@@ -233,7 +246,7 @@ def step(n: str, label: str, title: str, body: str, extra: str,
     living room that used to sit here said nothing at all.
     """
     art = media if media else photo(pid, alt, 'square', 900)
-    return f"""<div class="alt-row reveal{' flip' if flip else ''}" style="margin-bottom:clamp(56px,7vw,96px)">
+    return f"""<div class="alt-row reveal{' flip' if flip else ''}" style="margin-bottom:clamp(40px,4.6vw,66px)">
   <div class="alt-media">{art}</div>
   <div>
     <div class="step-big"><span class="n">{n}</span><span class="l">{label}</span></div>
@@ -611,6 +624,198 @@ PAGES['faq.html'] = dict(
 </section>""" + closer('Still deciding?',
                'Set up a house for free and work through the Queensland schemes '
                'before you pay for anything.'),
+)
+
+# ----------------------------------------------------------------- calculator
+# Arithmetic only. It never says anyone qualifies for anything, never names a
+# lender, and never stores or transmits an input — everything runs in the page.
+
+PAGES['calculator.html'] = dict(
+    title='What could you buy together? — CoHomed',
+    desc='Put in what each of you earns and has saved, and see the arithmetic: '
+         'indicative borrowing, buying power, deposit each, and which Queensland '
+         'schemes are open to a group your size.',
+    nav_current='/calculator.html',
+    body=page_head(
+        'Calculator',
+        'What could you buy together?',
+        'Put in what each of you earns and has saved. This is arithmetic on the '
+        'numbers you enter — not an assessment, not advice, and nothing leaves '
+        'your browser.',
+    ) + """
+<section style="padding-top:0">
+  <div class="wrap" style="max-width:1000px">
+    <div class="calc">
+
+      <div class="calc-in">
+        <div class="calc-people">
+          <span class="eyebrow">How many of you</span>
+          <div class="seg" id="calcCount" role="group" aria-label="Number of buyers">
+            <button type="button" data-n="2">2</button>
+            <button type="button" data-n="3">3</button>
+            <button type="button" data-n="4" class="is-on">4</button>
+          </div>
+        </div>
+
+        <div id="calcRows" class="calc-rows"></div>
+
+        <label class="calc-field calc-field--wide">
+          <span>Assumed interest rate <em id="calcRateOut">6.0%</em></span>
+          <input type="range" id="calcRate" min="4.5" max="9" step="0.1" value="6">
+        </label>
+        <p class="fine">Lenders assess at roughly 3% above the offer rate. This
+        uses that buffer, a 30-year term, and standard living-expense benchmarks.</p>
+      </div>
+
+      <div class="calc-out" id="calcOut" aria-live="polite">
+        <div class="calc-hero">
+          <span class="eyebrow">Indicative buying power</span>
+          <b id="calcPower">$0</b>
+          <em id="calcBreak">&nbsp;</em>
+        </div>
+        <div class="calc-stats">
+          <div><b id="calcBorrow">$0</b><span>Could borrow</span></div>
+          <div><b id="calcDeposit">$0</b><span>Deposit pooled</span></div>
+          <div><b id="calcEach">$0</b><span>Deposit each</span></div>
+          <div><b id="calcRepay">$0</b><span>Monthly repayment</span></div>
+        </div>
+        <div class="calc-schemes">
+          <span class="eyebrow">Schemes open to a group this size</span>
+          <ul id="calcSchemes"></ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="note" style="margin-top:26px">
+      <b>This is a sum, not an assessment.</b> Real borrowing capacity varies a
+      great deal between lenders — how they treat HECS, living expenses, casual
+      income and whether they assess you jointly or individually. A broker or
+      lender will give you a different number, in either direction. CoHomed is
+      not a credit provider, does not arrange finance, and does not determine
+      anyone&rsquo;s eligibility for any scheme.
+    </div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var COUNT = 4;
+  var DEFAULTS = [[85000, 42000], [72000, 31000], [64000, 25000], [58000, 18000]];
+  var rows = document.getElementById('calcRows');
+  if (!rows) return;
+
+  /* Australian resident rates, 2026-27, plus the 2% Medicare levy. */
+  function taxOf(g) {
+    var t;
+    if (g <= 18200) t = 0;
+    else if (g <= 45000) t = (g - 18200) * 0.15;
+    else if (g <= 135000) t = 4020 + (g - 45000) * 0.30;
+    else if (g <= 190000) t = 31020 + (g - 135000) * 0.37;
+    else t = 51370 + (g - 190000) * 0.45;
+    return t + g * 0.02;
+  }
+  var money = function (n) { return '$' + Math.round(n).toLocaleString('en-AU'); };
+  var big = function (n) {
+    return n >= 1e6 ? '$' + (n / 1e6).toFixed(2) + 'm' : '$' + Math.round(n / 1000) + 'k';
+  };
+
+  function build() {
+    rows.innerHTML = '';
+    for (var i = 0; i < COUNT; i++) {
+      var d = DEFAULTS[i];
+      var el = document.createElement('div');
+      el.className = 'calc-row';
+      el.innerHTML =
+        '<span class="calc-who">Person ' + (i + 1) + '</span>' +
+        '<label class="calc-field"><span>Gross income <em data-out="inc' + i + '"></em></span>' +
+        '<input type="range" data-k="inc" data-i="' + i + '" min="0" max="200000" step="1000" value="' + d[0] + '"></label>' +
+        '<label class="calc-field"><span>Savings <em data-out="dep' + i + '"></em></span>' +
+        '<input type="range" data-k="dep" data-i="' + i + '" min="0" max="300000" step="1000" value="' + d[1] + '"></label>';
+      rows.appendChild(el);
+    }
+    rows.addEventListener('input', calc);
+    calc();
+  }
+
+  function calc() {
+    var incomes = [], deps = [];
+    rows.querySelectorAll('input').forEach(function (inp) {
+      var v = +inp.value, i = +inp.dataset.i;
+      (inp.dataset.k === 'inc' ? incomes : deps)[i] = v;
+      var out = rows.querySelector('[data-out="' + inp.dataset.k + i + '"]');
+      if (out) out.textContent = money(v);
+    });
+
+    var rate = +document.getElementById('calcRate').value;
+    document.getElementById('calcRateOut').textContent = rate.toFixed(1) + '%';
+
+    var netMonthly = incomes.reduce(function (a, g) { return a + (g - taxOf(g)); }, 0) / 12;
+    /* Household expense benchmark. Scaling this too gently was producing
+       borrowing capacity above six times gross for a group of four, which no
+       lender would write. */
+    var living = 1200 + 1300 * COUNT;
+    var surplus = Math.max(0, netMonthly - living);
+
+    var assess = (rate + 3) / 100 / 12;         /* lender buffer */
+    var n = 360;
+    var capacity = surplus * (1 - Math.pow(1 + assess, -n)) / assess;
+
+    var pooled = deps.reduce(function (a, b) { return a + b; }, 0);
+    var usable = Math.max(0, pooled - 7000);     /* conveyancing, B&P, registration */
+
+    /* Two ceilings, and the lower one wins. Income alone was giving answers at
+       94% LVR — a number no lender would approve and misleading to show. */
+    var MAX_LVR = 0.90;
+    var byIncome = usable + capacity;
+    var byDeposit = usable / (1 - MAX_LVR);
+    var power = Math.min(byIncome, byDeposit);
+    var borrow = Math.max(0, power - usable);
+    var limit = byDeposit < byIncome ? 'deposit' : 'income';
+
+    var r = rate / 100 / 12;
+    var repay = borrow > 0 ? borrow * r / (1 - Math.pow(1 + r, -n)) : 0;
+    var lvr = power > 0 ? borrow / power * 100 : 0;
+
+    document.getElementById('calcPower').textContent = big(power);
+    document.getElementById('calcBreak').textContent =
+      money(pooled) + ' saved plus ' + money(borrow) + ' borrowed, at ' +
+      lvr.toFixed(0) + '% LVR — ' + (limit === 'deposit'
+        ? 'limited by the deposit, not by income'
+        : 'limited by income, not by the deposit');
+    document.getElementById('calcBorrow').textContent = big(borrow);
+    document.getElementById('calcDeposit').textContent = big(pooled);
+    document.getElementById('calcEach').textContent = big(pooled / COUNT);
+    document.getElementById('calcRepay').textContent = money(repay);
+
+    var capped = COUNT > 2;
+    var schemes = [
+      ['First Home Owner Grant', true, 'New homes under $750,000'],
+      ['First home (new home) duty concession', true, 'Assessed on each person’s share'],
+      ['Boost to Buy', !capped, capped ? 'Thresholds stop at two adults' : 'Property cap $1,000,000'],
+      ['First Home Guarantee', !capped, capped ? 'Maximum two applicants' : 'Cannot be combined with Boost to Buy']
+    ];
+    document.getElementById('calcSchemes').innerHTML = schemes.map(function (s) {
+      return '<li class="' + (s[1] ? 'is-y' : 'is-n') + '"><b>' + s[0] + '</b><em>' + s[2] + '</em></li>';
+    }).join('');
+  }
+
+  document.getElementById('calcCount').addEventListener('click', function (e) {
+    var b = e.target.closest('button');
+    if (!b) return;
+    COUNT = +b.dataset.n;
+    this.querySelectorAll('button').forEach(function (x) {
+      x.classList.toggle('is-on', x === b);
+    });
+    build();
+  });
+
+  build();
+})();
+</script>""" + closer(
+        'Numbers looking possible?',
+        'Set up a house, invite the others, and work through the schemes properly '
+        'before you spend anything.'),
 )
 
 # ---------------------------------------------------------------------- about
