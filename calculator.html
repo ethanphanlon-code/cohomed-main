@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What could you buy together? — CoHomed</title>
-<meta name="description" content="Put in what each of you earns and has saved, and see the arithmetic: indicative borrowing, buying power, deposit each, and which Queensland schemes are open to a group your size.">
+<meta name="description" content="Put in what each of you earns and has saved, pick a target price, and see the arithmetic: borrowing capacity, deposit each, transfer duty, the grant, and which Queensland schemes are open to a group your size.">
 <meta name="theme-color" content="#4E6B54">
 <link rel="canonical" href="https://www.cohomed.com/calculator.html">
 <meta property="og:type" content="website">
 <meta property="og:title" content="What could you buy together? — CoHomed">
-<meta property="og:description" content="Put in what each of you earns and has saved, and see the arithmetic: indicative borrowing, buying power, deposit each, and which Queensland schemes are open to a group your size.">
+<meta property="og:description" content="Put in what each of you earns and has saved, pick a target price, and see the arithmetic: borrowing capacity, deposit each, transfer duty, the grant, and which Queensland schemes are open to a group your size.">
 <meta property="og:url" content="https://www.cohomed.com/calculator.html">
 <meta property="og:site_name" content="CoHomed">
 <link rel="icon" href="/assets/cohomed-favicon.svg" type="image/svg+xml">
@@ -17,7 +17,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=596482cf">
+<link rel="stylesheet" href="/styles.css?v=c0559ed2">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -37,8 +37,8 @@
   </div>
 </section>
 <section style="padding-top:0">
-  <div class="wrap" style="max-width:1000px">
-    <div class="calc">
+  <div class="wrap" style="max-width:1060px">
+    <div class="calc" id="calc">
 
       <div class="calc-in">
         <div class="calc-people">
@@ -52,26 +52,54 @@
 
         <div id="calcRows" class="calc-rows"></div>
 
-        <label class="calc-field calc-field--wide">
-          <span>Assumed interest rate <em id="calcRateOut">6.0%</em></span>
-          <input type="range" id="calcRate" min="4.5" max="9" step="0.1" value="6">
-        </label>
-        <p class="fine">Lenders assess at roughly 3% above the offer rate. This
-        uses that buffer, a 30-year term, and standard living-expense benchmarks.</p>
+        <div class="calc-block">
+          <span class="eyebrow">The place you have in mind</span>
+          <label class="calc-field">
+            <span>Target purchase price <em id="calcTargetOut">$840,000</em></span>
+            <input type="range" id="calcTarget" min="350000" max="1600000" step="10000" value="840000">
+          </label>
+          <div class="calc-people" style="margin-top:14px">
+            <span class="calc-sub">New or established</span>
+            <div class="seg" id="calcNew" role="group" aria-label="Property type">
+              <button type="button" data-v="1" class="is-on">New</button>
+              <button type="button" data-v="0">Established</button>
+            </div>
+          </div>
+          <p class="fine" style="margin-top:10px">A new home opens the $30,000 grant
+          and the duty concession that reduces transfer duty to nil.</p>
+        </div>
+
+        <div class="calc-block">
+          <span class="eyebrow">Assumptions</span>
+          <label class="calc-field">
+            <span>Interest rate <em id="calcRateOut">6.0%</em></span>
+            <input type="range" id="calcRate" min="4.5" max="9" step="0.1" value="6">
+          </label>
+          <p class="fine" style="margin-top:10px">Lenders assess at roughly 3% above
+          the offer rate. This uses that buffer, a 30-year term, standard living-expense
+          benchmarks and a 90% maximum loan-to-value ratio.</p>
+        </div>
       </div>
 
       <div class="calc-out" id="calcOut" aria-live="polite">
-        <div class="calc-hero">
-          <span class="eyebrow">Indicative buying power</span>
-          <b id="calcPower">$0</b>
-          <em id="calcBreak">&nbsp;</em>
+        <div class="calc-verdict" id="calcVerdict">
+          <span class="eyebrow" id="calcVerdictLabel">At your target</span>
+          <b id="calcVerdictValue">$0</b>
+          <em id="calcVerdictNote">&nbsp;</em>
         </div>
+
         <div class="calc-stats">
-          <div><b id="calcBorrow">$0</b><span>Could borrow</span></div>
-          <div><b id="calcDeposit">$0</b><span>Deposit pooled</span></div>
+          <div><b id="calcCapacity">$0</b><span>Borrowing capacity</span></div>
+          <div><b id="calcPower">$0</b><span>Buying power</span></div>
           <div><b id="calcEach">$0</b><span>Deposit each</span></div>
-          <div><b id="calcRepay">$0</b><span>Monthly repayment</span></div>
+          <div><b id="calcRepay">$0</b><span>Repayment each, monthly</span></div>
         </div>
+
+        <div class="calc-help">
+          <span class="eyebrow">Government help at this price</span>
+          <ul id="calcHelp"></ul>
+        </div>
+
         <div class="calc-schemes">
           <span class="eyebrow">Schemes open to a group this size</span>
           <ul id="calcSchemes"></ul>
@@ -83,20 +111,23 @@
     <div class="note" style="margin-top:26px">
       <b>This is a sum, not an assessment.</b> Real borrowing capacity varies a
       great deal between lenders — how they treat HECS, living expenses, casual
-      income and whether they assess you jointly or individually. A broker or
-      lender will give you a different number, in either direction. CoHomed is
-      not a credit provider, does not arrange finance, and does not determine
-      anyone&rsquo;s eligibility for any scheme.
+      income, and whether they assess you jointly or individually. A broker or
+      lender will give you a different number, in either direction. Duty and grant
+      figures reproduce published Queensland criteria as at August 2026 and change
+      without notice. CoHomed is not a credit provider, does not arrange finance,
+      and does not determine anyone&rsquo;s eligibility for anything.
     </div>
   </div>
 </section>
 
 <script>
 (function () {
-  var COUNT = 4;
-  var DEFAULTS = [[85000, 42000], [72000, 31000], [64000, 25000], [58000, 18000]];
+  var panel = document.getElementById('calc');
   var rows = document.getElementById('calcRows');
-  if (!rows) return;
+  if (!panel || !rows) return;
+
+  var COUNT = 4, IS_NEW = true;
+  var DEFAULTS = [[85000, 42000], [72000, 31000], [64000, 25000], [58000, 18000]];
 
   /* Australian resident rates, 2026-27, plus the 2% Medicare levy. */
   function taxOf(g) {
@@ -108,6 +139,23 @@
     else t = 51370 + (g - 190000) * 0.45;
     return t + g * 0.02;
   }
+
+  /* Queensland transfer duty. Verified against QRO's own worked examples:
+     $850,000 -> $24,100 and $730,000 -> $18,700 under the home concession. */
+  function homeConcession(v) {
+    if (v <= 350000) return v / 100 * 1;
+    if (v <= 540000) return 3500 + (v - 350000) / 100 * 3.5;
+    if (v <= 1000000) return 10150 + (v - 540000) / 100 * 4.5;
+    return 30850 + (v - 1000000) / 100 * 5.75;
+  }
+  function dutyFor(v, isNew) {
+    if (isNew) return 0;                       /* first home (new home): nil, no cap */
+    if (v <= 700000) return 0;                 /* first home, established */
+    if (v >= 800000) return homeConcession(v); /* concession gone above $800k */
+    var full = homeConcession(700000);
+    return Math.max(0, homeConcession(v) - full * (800000 - v) / 100000);
+  }
+
   var money = function (n) { return '$' + Math.round(n).toLocaleString('en-AU'); };
   var big = function (n) {
     return n >= 1e6 ? '$' + (n / 1e6).toFixed(2) + 'm' : '$' + Math.round(n / 1000) + 'k';
@@ -122,12 +170,11 @@
       el.innerHTML =
         '<span class="calc-who">Person ' + (i + 1) + '</span>' +
         '<label class="calc-field"><span>Gross income <em data-out="inc' + i + '"></em></span>' +
-        '<input type="range" data-k="inc" data-i="' + i + '" min="0" max="200000" step="1000" value="' + d[0] + '"></label>' +
+        '<input type="range" data-k="inc" data-i="' + i + '" min="0" max="220000" step="1000" value="' + d[0] + '"></label>' +
         '<label class="calc-field"><span>Savings <em data-out="dep' + i + '"></em></span>' +
-        '<input type="range" data-k="dep" data-i="' + i + '" min="0" max="300000" step="1000" value="' + d[1] + '"></label>';
+        '<input type="range" data-k="dep" data-i="' + i + '" min="0" max="400000" step="1000" value="' + d[1] + '"></label>';
       rows.appendChild(el);
     }
-    rows.addEventListener('input', calc);
     calc();
   }
 
@@ -141,45 +188,70 @@
     });
 
     var rate = +document.getElementById('calcRate').value;
+    var target = +document.getElementById('calcTarget').value;
     document.getElementById('calcRateOut').textContent = rate.toFixed(1) + '%';
+    document.getElementById('calcTargetOut').textContent = money(target);
 
-    var netMonthly = incomes.reduce(function (a, g) { return a + (g - taxOf(g)); }, 0) / 12;
-    /* Household expense benchmark. Scaling this too gently was producing
-       borrowing capacity above six times gross for a group of four, which no
-       lender would write. */
+    var net = incomes.reduce(function (a, g) { return a + (g - taxOf(g)); }, 0) / 12;
     var living = 1200 + 1300 * COUNT;
-    var surplus = Math.max(0, netMonthly - living);
+    var surplus = Math.max(0, net - living);
 
-    var assess = (rate + 3) / 100 / 12;         /* lender buffer */
-    var n = 360;
+    var assess = (rate + 3) / 100 / 12, n = 360;
     var capacity = surplus * (1 - Math.pow(1 + assess, -n)) / assess;
 
     var pooled = deps.reduce(function (a, b) { return a + b; }, 0);
-    var usable = Math.max(0, pooled - 7000);     /* conveyancing, B&P, registration */
+    var duty = dutyFor(target, IS_NEW);
+    var grant = (IS_NEW && target < 750000) ? 30000 : 0;
+    var otherCosts = 7000;
+    var usable = Math.max(0, pooled + grant - duty - otherCosts);
 
-    /* Two ceilings, and the lower one wins. Income alone was giving answers at
-       94% LVR — a number no lender would approve and misleading to show. */
+    /* Two ceilings — income and deposit — and the lower one wins. Without the
+       LVR cap this answered "$1.8m" on a $116k deposit, which is 94% LVR. */
     var MAX_LVR = 0.90;
-    var byIncome = usable + capacity;
-    var byDeposit = usable / (1 - MAX_LVR);
-    var power = Math.min(byIncome, byDeposit);
-    var borrow = Math.max(0, power - usable);
-    var limit = byDeposit < byIncome ? 'deposit' : 'income';
+    var power = Math.min(usable + capacity, usable / (1 - MAX_LVR));
+
+    var needAtTarget = target - usable;          /* loan required to hit the target */
+    var reachable = needAtTarget <= capacity && needAtTarget <= target * MAX_LVR;
+    var shortfall = Math.max(0, target - power);
 
     var r = rate / 100 / 12;
-    var repay = borrow > 0 ? borrow * r / (1 - Math.pow(1 + r, -n)) : 0;
-    var lvr = power > 0 ? borrow / power * 100 : 0;
+    var loan = Math.max(0, Math.min(needAtTarget, capacity));
+    var repay = loan > 0 ? loan * r / (1 - Math.pow(1 + r, -n)) : 0;
+    var lvrAtTarget = target > 0 ? Math.max(0, needAtTarget) / target * 100 : 0;
 
+    var v = document.getElementById('calcVerdict');
+    v.classList.toggle('is-short', !reachable);
+    document.getElementById('calcVerdictLabel').textContent =
+      reachable ? 'Your target looks reachable' : 'Short of your target by';
+    document.getElementById('calcVerdictValue').textContent =
+      reachable ? money(target) : money(shortfall);
+    document.getElementById('calcVerdictNote').textContent = reachable
+      ? money(usable) + ' of your own plus ' + money(Math.max(0, needAtTarget)) +
+        ' borrowed, at ' + lvrAtTarget.toFixed(0) + '% LVR'
+      : (usable / (1 - MAX_LVR) < usable + capacity
+          ? 'Limited by the deposit — more savings moves this faster than more income'
+          : 'Limited by income — more income moves this faster than more savings');
+
+    document.getElementById('calcCapacity').textContent = big(capacity);
     document.getElementById('calcPower').textContent = big(power);
-    document.getElementById('calcBreak').textContent =
-      money(pooled) + ' saved plus ' + money(borrow) + ' borrowed, at ' +
-      lvr.toFixed(0) + '% LVR — ' + (limit === 'deposit'
-        ? 'limited by the deposit, not by income'
-        : 'limited by income, not by the deposit');
-    document.getElementById('calcBorrow').textContent = big(borrow);
-    document.getElementById('calcDeposit').textContent = big(pooled);
     document.getElementById('calcEach').textContent = big(pooled / COUNT);
-    document.getElementById('calcRepay').textContent = money(repay);
+    document.getElementById('calcRepay').textContent = money(repay / COUNT);
+
+    var help = [];
+    help.push(['Transfer duty', duty === 0 ? 'Nil' : money(duty),
+      duty === 0
+        ? (IS_NEW ? 'First home (new home) concession — no value cap'
+                  : 'First home concession — nil at or under $700,000')
+        : 'First home concession has run out at this price']);
+    help.push(['First Home Owner Grant', grant ? money(grant) : 'Nil',
+      grant ? 'New home under $750,000'
+            : (IS_NEW ? 'Only on new homes under $750,000' : 'New homes only')]);
+    var saved = grant + (homeConcession(target) - duty);
+    help.push(['Worth in total', money(Math.max(0, saved)),
+      'Against an ordinary owner-occupier buying the same place']);
+    document.getElementById('calcHelp').innerHTML = help.map(function (h) {
+      return '<li><span>' + h[0] + '</span><b>' + h[1] + '</b><em>' + h[2] + '</em></li>';
+    }).join('');
 
     var capped = COUNT > 2;
     var schemes = [
@@ -193,14 +265,21 @@
     }).join('');
   }
 
+  /* One listener on the whole panel. The rate and target inputs live outside
+     #calcRows, which is why binding to that container left them inert. */
+  panel.addEventListener('input', calc);
+
   document.getElementById('calcCount').addEventListener('click', function (e) {
-    var b = e.target.closest('button');
-    if (!b) return;
+    var b = e.target.closest('button'); if (!b) return;
     COUNT = +b.dataset.n;
-    this.querySelectorAll('button').forEach(function (x) {
-      x.classList.toggle('is-on', x === b);
-    });
+    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('is-on', x === b); });
     build();
+  });
+  document.getElementById('calcNew').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    IS_NEW = b.dataset.v === '1';
+    this.querySelectorAll('button').forEach(function (x) { x.classList.toggle('is-on', x === b); });
+    calc();
   });
 
   build();

@@ -1431,7 +1431,6 @@ section.field .btn-placeholder:hover { border-color: var(--on-accent); color: va
   display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
   font-size: 14.5px; color: var(--body);
 }
-.calc-field--wide { margin-top: 4px; }
 .calc-field em {
   font-style: normal; font-weight: 700; color: var(--accent-deep);
   font-variant-numeric: tabular-nums;
@@ -1498,3 +1497,49 @@ section.field .btn-placeholder:hover { border-color: var(--on-accent); color: va
 .calc-schemes li.is-n { border-left-color: var(--clay-soft); opacity: .62; }
 .calc-schemes b { font-size: 14px; font-weight: 600; color: var(--on-accent); line-height: 1.3; }
 .calc-schemes em { font-size: 12px; font-style: normal; color: var(--on-accent-label); }
+
+
+/* ---- calculator: grouped input blocks ----
+   Target price and the rate assumption were sitting bare under the last
+   person's sliders, so they read as part of that person. Each now has its own
+   headed block with a rule above it. */
+.calc-block {
+  margin-top: 22px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
+}
+.calc-block > .eyebrow { margin-bottom: 12px; }
+.calc-sub { font-size: 14.5px; color: var(--body); }
+
+/* ---- verdict ---- */
+.calc-verdict b {
+  display: block; margin-top: 8px;
+  font-size: clamp(36px, 4.8vw, 54px); font-weight: 800;
+  letter-spacing: -.04em; line-height: 1; color: var(--on-accent);
+  font-variant-numeric: tabular-nums;
+}
+.calc-verdict em {
+  display: block; margin-top: 10px;
+  font-size: 13.5px; font-style: normal; line-height: 1.5; color: var(--on-accent-body);
+}
+.calc-verdict.is-short b { color: #F6C9B4; }
+
+/* ---- government help at this price ---- */
+.calc-help ul { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 7px; }
+.calc-help li {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 1px 12px;
+  padding: 10px 13px; border-radius: 11px;
+  background: rgba(255,249,243,.10);
+}
+.calc-help span { font-size: 14px; color: var(--on-accent); }
+.calc-help b {
+  font-size: 15px; font-weight: 700; color: var(--on-accent);
+  text-align: right; font-variant-numeric: tabular-nums;
+}
+.calc-help em {
+  grid-column: 1 / -1;
+  font-size: 12px; font-style: normal; color: var(--on-accent-label); line-height: 1.35;
+}
+.calc-schemes { margin-top: 20px; }
