@@ -270,8 +270,8 @@ PAGES['how-it-works.html'] = dict(
 <section style="padding-top:0;padding-bottom:clamp(48px,6vw,80px)">
   <div class="wrap">
     <div class="rise rise-1">
-      {photo('photo-1512917774080-9991f1c4c750',
-             'Suburban Queensland home with a lawn and front path, seen from the street',
+      {photo('photo-1746485838238-cef75c9f02a3',
+             'A weatherboard Queenslander with a deep veranda, set among subtropical greenery',
              'band', 1800,
              over='<strong>The part nobody warns you about</strong>'
                   'The finance is rarely the hard bit. The structure is.')}
@@ -292,8 +292,8 @@ PAGES['how-it-works.html'] = dict(
               'A rough target price is fine; it only drives the estimates',
               'You get a six-character code at the end. That is how everyone else gets in',
           ),
-          'photo-1554224155-6726b3ff858f',
-          'A calculator, notebook and pen on a desk while working out savings')}
+          'photo-1632110325927-9db96b3f2e2c',
+          'A timber home half hidden by dense subtropical planting')}
 
     {step('02', 'Invite',
           'Bring in the people you are buying with.',
@@ -320,8 +320,8 @@ PAGES['how-it-works.html'] = dict(
               'Pooled deposit and remaining balance update live',
               'Estimates only — not an assessment of what anyone can borrow',
           ),
-          'photo-1552664730-d307ca884978',
-          'Three people talking over coffee and a laptop at a table')}
+          'photo-1562564055-71e051d33c19',
+          'Two people going through and signing paperwork together at a table')}
 
     {step('04', 'The schemes',
           'Find out where you actually stand.',
@@ -335,8 +335,8 @@ PAGES['how-it-works.html'] = dict(
               'two cannot cover a house of four',
               'A self-assessment against published rules, not a determination',
           ),
-          'photo-1450101499163-c8848c66ca85',
-          'Someone reading and annotating a printed document at a desk',
+          'photo-1635859890085-ec8cb5466806',
+          'Printed documents spread across a table, being worked through',
           flip=True)}
 
     {step('05', 'The pack',

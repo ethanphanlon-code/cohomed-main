@@ -21,7 +21,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400..800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/styles.css?v=697784de">
+<link rel="stylesheet" href="/styles.css?v=4c3aa25a">
 <script>document.documentElement.classList.add('js')</script>
 </head>
 <body>
@@ -93,8 +93,8 @@
              fetchpriority="high" decoding="async">
       </div>
 
-      <div class="device" id="device">
-        <div class="device-screen">
+      <div class="device frame" id="device">
+        <div class="frame-screen">
           <img class="shot is-on" src="/assets/screens/home.png"
                alt="The CoHomed home screen showing The Kelvin Grove House at 75% readiness"
                width="1080" height="2400" fetchpriority="high" decoding="async">
@@ -141,7 +141,7 @@
     </div>
 
     <div class="reveal" style="margin-top:clamp(34px,4vw,56px)">
-      <div class="photo band"><img src="https://images.unsplash.com/photo-1519671282429-b44660ead0a7?auto=format&amp;fit=crop&amp;w=1800&amp;q=70" alt="Housemates sitting around the table in their shared home" loading="lazy" decoding="async"><div class="over"><strong>Four people, one kitchen table</strong>The money is usually already there. The structure is what is missing.</div></div>
+      <div class="photo band"><img src="https://images.unsplash.com/photo-1722339141706-a9ac7dd7478f?auto=format&amp;fit=crop&amp;w=1800&amp;q=70" alt="A suburban street under flowering jacarandas at sunset" loading="lazy" decoding="async"><div class="over"><strong>Brisbane’s median house is now $1.2 million</strong>Alone, that is out of reach for most people. Between four, the deposit is around $60,000 each.</div></div>
     </div>
 
     <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px;margin-top:clamp(34px,4vw,56px)">
@@ -230,16 +230,24 @@
     <div class="shots reveal" style="margin-top:clamp(40px,5vw,64px)">
 
       <figure>
-        <img class="shot" src="/assets/screens/house.png" loading="lazy" decoding="async"
-             width="1080" height="2400"
-             alt="The House tab showing four members, two joined and two invited, with the ownership split below">
+        <div class="frame">
+          <div class="frame-screen">
+            <img class="shot" src="/assets/screens/house.png" loading="lazy" decoding="async"
+                 width="1080" height="2400"
+                 alt="The House tab showing four members, two joined and two invited, with the ownership split below">
+          </div>
+        </div>
         <figcaption>Shares update as each person enters what they’re putting in.</figcaption>
       </figure>
 
       <figure>
-        <img class="shot" src="/assets/screens/documents.png" loading="lazy" decoding="async"
-             width="1080" height="2400"
-             alt="The Documents tab showing all six documents ready to sign and download">
+        <div class="frame">
+          <div class="frame-screen">
+            <img class="shot" src="/assets/screens/documents.png" loading="lazy" decoding="async"
+                 width="1080" height="2400"
+                 alt="The Documents tab showing all six documents ready to sign and download">
+          </div>
+        </div>
         <figcaption>Six documents, prepared from the house’s own figures.</figcaption>
       </figure>
 

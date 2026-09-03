@@ -401,7 +401,10 @@ section.field .eyebrow { color: var(--on-accent-label); }
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(45,26,16,.34), rgba(45,26,16,0) 46%);
+  /* Deep enough to carry white type over a bright subject. The jacaranda band
+     has a sunlit road exactly where the caption sits, and .34 left it fighting
+     the background. */
+  background: linear-gradient(to top, rgba(45,26,16,.58), rgba(45,26,16,.12) 42%, rgba(45,26,16,0) 62%);
   pointer-events: none;
 }
 .photo img {
@@ -455,6 +458,9 @@ section.field .eyebrow { color: var(--on-accent-label); }
   justify-content: center;
 }
 .shots figure { margin: 0; max-width: 280px; }
+/* These render at 280px against the hero's 194px, so the bezel scales up to
+   keep the same proportion rather than looking mean at the larger size. */
+.shots .frame { --bezel: 7px; --frame-radius: 36px; }
 .shots figcaption {
   margin-top: 18px;
   text-align: center;
@@ -476,25 +482,24 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .hero-media { position: relative; perspective: 1100px; margin-bottom: 88px; }
 @media (min-width: 901px) { .hero-media { margin-bottom: 60px; } }
 
-/* The device body. The captures carry a hairline bezel, a punch-hole camera
-   and the gesture bar already, but at 194px wide that hairline falls below a
-   pixel and the thing reads as a flat screenshot. So the physical frame is
-   built here, outside the image — and deliberately adds no notch or camera,
-   because the capture already has one. */
-.device {
-  position: absolute;
-  left: clamp(-14px, -2vw, -4px);
-  bottom: clamp(-26px, -2.2vw, -14px);
-  width: clamp(146px, 17vw, 194px);
-  aspect-ratio: 1080 / 2400;
-  z-index: 1;
-  padding: 5px;
+/* ---- device frame ----
+   The captures carry a hairline bezel, a punch-hole camera and the gesture
+   bar already, but scaled down to a couple of hundred pixels that hairline
+   falls below one device pixel and the thing reads as a flat rectangle. So
+   the physical frame is built here, outside the image — and deliberately
+   adds no notch or camera, because the capture already supplies both.
+
+   Shared by the hero device and the screenshot pair further down, so the two
+   can't drift apart. --bezel drives the whole thing; override it alone to
+   rescale the frame. */
+.frame {
+  --bezel: 5px;
+  --frame-radius: 30px;
+  position: relative;
+  padding: var(--bezel);
   background: #17130F;
-  border-radius: 30px;
-  transform-style: preserve-3d;
-  will-change: transform;
-  transition: transform .5s var(--ease);
-  /* Rim highlight suggests the polished edge; the warm drop shadow lives on
+  border-radius: var(--frame-radius);
+  /* Rim highlight suggests the polished edge; the warm drop shadow sits on
      the frame rather than the screenshots so it holds steady while they
      cross-fade instead of dipping as both pass through half opacity. */
   box-shadow:
@@ -503,8 +508,8 @@ section.field .eyebrow { color: var(--on-accent-label); }
 }
 
 /* Side buttons, in percentages so they track the frame as it scales. */
-.device::before,
-.device::after {
+.frame::before,
+.frame::after {
   content: "";
   position: absolute;
   right: -2px;
@@ -512,18 +517,18 @@ section.field .eyebrow { color: var(--on-accent-label); }
   border-radius: 0 2px 2px 0;
   background: #2C241D;
 }
-.device::before { top: 23%; height: 7%; }   /* volume */
-.device::after  { top: 34%; height: 11%; }  /* power  */
+.frame::before { top: 23%; height: 7%; }   /* volume */
+.frame::after  { top: 34%; height: 11%; }  /* power  */
 
-.device-screen {
+.frame-screen {
   position: relative;
   width: 100%;
-  height: 100%;
-  border-radius: 25px;
+  aspect-ratio: 1080 / 2400;
+  border-radius: calc(var(--frame-radius) - var(--bezel));
   overflow: hidden;
   background: var(--canvas);
 }
-.device .shot {
+.frame-screen .shot {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -534,9 +539,21 @@ section.field .eyebrow { color: var(--on-accent-label); }
   /* The bezel makes the screen box a hair shorter than 1080:2400, so cover
      rather than stretch. The crop is around a pixel. */
   object-fit: cover;
-  opacity: 0;
-  transition: opacity .6s ease;
 }
+
+/* The hero device: the frame plus positioning and the pointer tilt. */
+.device {
+  position: absolute;
+  left: clamp(-14px, -2vw, -4px);
+  bottom: clamp(-26px, -2.2vw, -14px);
+  width: clamp(146px, 17vw, 194px);
+  z-index: 1;
+  transform-style: preserve-3d;
+  will-change: transform;
+  transition: transform .5s var(--ease);
+}
+/* Only the hero stacks and cross-fades; the pair below shows one each. */
+.device .shot { opacity: 0; transition: opacity .6s ease; }
 .device .shot.is-on { opacity: 1; }
 
 /* Caption and dots sit under the phone, aligned to it. Hidden until the
@@ -573,9 +590,8 @@ section.field .eyebrow { color: var(--on-accent-label); }
 }
 @media (max-width: 640px) {
   .hero-media .photo.tall { aspect-ratio: 4 / 3.2; }
-  /* Thinner bezel and tighter corners at 124px, or the frame eats the screen. */
-  .device { width: 124px; bottom: -10px; left: -4px; padding: 4px; border-radius: 24px; }
-  .device-screen { border-radius: 20px; }
+  /* Thinner bezel at 124px, or the frame starts eating the screen. */
+  .device { width: 124px; bottom: -10px; left: -4px; --bezel: 4px; --frame-radius: 24px; }
   .device-ui { width: 124px; bottom: -74px; left: -4px; }
 }
 
