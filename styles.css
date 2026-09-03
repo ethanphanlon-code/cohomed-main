@@ -585,12 +585,20 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .sim-scroll {
   position: absolute;
   top: 0; left: 0; right: 0;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   gap: 1.35em;
   padding: 1.5em 1.15em 4.2em;
   transition: transform 2.4s var(--ease);
 }
+/* Content does not scale perfectly with the frame — wrapping and hairline
+   borders do not shrink in step — so a screen that overflows at 124px can fall
+   80px short at 194px. Rather than tune for one width, the column is at least
+   as tall as the viewport and the final block anchors to the bottom, so any
+   slack lands in one deliberate gap instead of dead space under the content.
+   When the column overflows instead, the auto margin simply collapses. */
+.sim-scroll > *:last-child { margin-top: auto; }
 .sim-screen.is-front { transform: translateX(0); }
 .sim-screen.is-back  { transform: translateX(-100%); }
 
@@ -1037,3 +1045,65 @@ section.field .eyebrow { color: var(--on-accent-label); }
 .sim-cta, .sim-card--accent { opacity: 0; transform: translateY(.5em);
   transition: opacity .4s ease, transform .4s var(--ease); }
 .sim-cta.is-in, .sim-card--accent.is-in { opacity: 1; transform: none; }
+
+
+/* ---- sim: onboarding ----
+   The create-a-house flow is a stack route in the app, not a tab, so the tab
+   bar is hidden while these two screens are front. */
+
+.sim-obhead { display: flex; align-items: center; justify-content: space-between; }
+.sim-back { display: flex; color: var(--body); }
+.sim-back svg { width: 1.1em; height: 1.1em; }
+.sim-dots { display: flex; gap: .35em; }
+.sim-dots i {
+  width: .42em; height: .42em; border-radius: 50%;
+  background: var(--border-strong);
+  transition: background .35s ease, transform .35s var(--ease);
+}
+.sim-dots i.is-on { background: var(--accent); transform: scale(1.25); }
+.sim-obhead em { font-size: .72em; font-style: normal; color: var(--muted-deep); }
+.sim-obbody { font-size: .82em; line-height: 1.45; color: var(--body-soft); margin-top: .5em; }
+
+.sim-field {
+  display: flex; flex-direction: column; gap: .3em;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: .85em;
+  padding: .7em .8em;
+}
+.sim-field span {
+  font-size: .66em; font-weight: 700; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--label);
+}
+.sim-field b {
+  font-size: .95em; font-weight: 600; color: var(--ink);
+  min-height: 1.3em; line-height: 1.3;
+}
+/* The caret sits after the value and blinks only while typing. */
+.sim-caret {
+  position: absolute; opacity: 0;
+  width: 1px; height: 0;
+}
+.sim-field { position: relative; }
+.sim-field.is-typing b::after {
+  content: ""; display: inline-block;
+  width: .07em; height: 1em; margin-left: .1em;
+  background: var(--accent); vertical-align: -.15em;
+  animation: simCaret 1s steps(1) infinite;
+}
+@keyframes simCaret { 0%, 50% { opacity: 1; } 50.01%, 100% { opacity: 0; } }
+.sim-field.is-focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-wash); }
+
+.sim-btn {
+  background: var(--accent); color: var(--on-accent);
+  border-radius: 999px; padding: .75em;
+  font-size: .88em; font-weight: 700; text-align: center;
+  opacity: .45;
+  transition: opacity .35s ease, transform .2s var(--ease);
+}
+.sim-btn.is-ready { opacity: 1; }
+.sim-btn.is-press { transform: scale(.96); }
+
+/* Slide the tab bar away for the stack routes. */
+.sim-tabs { transition: transform .45s var(--ease), opacity .35s ease; }
+.sim.is-stack .sim-tabs { transform: translateY(110%); opacity: 0; }
